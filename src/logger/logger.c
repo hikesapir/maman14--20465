@@ -10,21 +10,15 @@ void createLogsDirIfNotExists()
         mkdir(dirname);
 }
 
-void printFormatted(const char *format, FILE *file, const char *logMessage, ...)
+void printFormatted(const char *format, FILE *file, va_list args)
 {
     /* Print to console */
-    va_list args;
-    va_start(args, logMessage);
     vprintf(format, args);
-    va_end(args);
 
     /* Print to log file */
     if (file != NULL)
     {
-        va_list fileArgs;
-        va_start(fileArgs, logMessage);
-        vfprintf(file, format, fileArgs);
-        va_end(fileArgs);
+        vfprintf(file, format, args);
         fclose(file);
     }
 }
