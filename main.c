@@ -21,7 +21,6 @@ int main(int argc, char *argv[])
         if (file != NULL)
         {
             /* START OF FILE USAGE */
-            file = stripMacros(file);
             /*...*/
             /*...*/
             /*...*/
