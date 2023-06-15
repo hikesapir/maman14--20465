@@ -3,23 +3,22 @@
 #include "fileValidation.h"
 #include "../logger/logger.h"
 
-/* check that the file is accessible */
 FILE *validateFile(char *fileName)
 {
-    FILE *out_file;
+    FILE *source_file;
     char fullFileName[120];
 
     strcpy(fullFileName, fileName); /* Copy fileName into fullFileName */
     strcat(fullFileName, ".as");    /* Add a .as to fullFileName */
 
     logInfo("oppening %s\n", fullFileName);
-    out_file = fopen(fullFileName, "r"); /* read only */
+    source_file = fopen(fullFileName, "r"); /* read only */
 
     /* test for file not existing. */
-    if (out_file == NULL)
+    if (source_file == NULL)
         logError("Error! Could not open file %s\n", fullFileName);
     else
         logInfo("File opened successfully!\n");
 
-    return out_file;
+    return source_file;
 }
