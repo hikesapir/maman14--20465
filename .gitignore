@@ -1,7 +1,8 @@
 *.o
-
 *.exe
 
 .vscode
 
-*.log
+logs/*
+input/*
+output/*
