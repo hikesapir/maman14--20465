@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "validations/fileValidation.h"
-#include "logger/logger.h"
+#include "src/validations/fileValidation.h"
+#include "src/logger/logger.h"
 
 int main(int argc, char *argv[])
 {
@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
         if (file != NULL)
         {
             /* START OF FILE USAGE */
+            file = stripMacros(file);
             /*...*/
             /*...*/
             /*...*/
