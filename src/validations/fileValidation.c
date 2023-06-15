@@ -1,12 +1,13 @@
 #include <string.h>
 #include <stdio.h>
+#include <limits.h>
 #include "fileValidation.h"
 #include "../logger/logger.h"
 
 FILE *validateFile(char *fileName)
 {
     FILE *source_file;
-    char fullFileName[120];
+    char fullFileName[PATH_MAX];
 
     strcpy(fullFileName, fileName); /* Copy fileName into fullFileName */
     strcat(fullFileName, ".as");    /* Add a .as to fullFileName */
