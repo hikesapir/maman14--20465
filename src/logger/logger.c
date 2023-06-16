@@ -3,6 +3,8 @@
 #include <sys/stat.h>
 #include <time.h>
 
+#define LOGGER_PATH "logs/logger.log"
+
 void createLogsDirIfNotExists()
 {
     const char *dirname = "logs";
@@ -41,7 +43,7 @@ void logInfo(const char *info, ...)
 
     createLogsDirIfNotExists();
 
-    infoFile = fopen("logs/info.log", "a");
+    infoFile = fopen(LOGGER_PATH, "a");
 
     va_start(args, info);
     printFormatted(info, infoFile, args);
@@ -55,7 +57,7 @@ void logError(const char *error, ...)
 
     createLogsDirIfNotExists();
 
-    errorFile = fopen("logs/error.log", "a");
+    errorFile = fopen(LOGGER_PATH, "a");
 
     va_start(args, error);
     printFormatted(error, errorFile, args);
