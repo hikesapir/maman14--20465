@@ -39,12 +39,10 @@ FILE *createStrippedFile(char *filePath)
     FILE *stripped_file;
     char fullFileName[PATH_MAX];
 
-    /* create output direrctory if not exists */
-    struct stat st;
-    if (stat("output", &st) == -1)
-        mkdir("output");
+    createDirIfNotExists(OUTPUT_FOLDER);
 
-    strcpy(fullFileName, "output\\");         /* Add output\ to the fullFileName*/
+    strcpy(fullFileName, OUTPUT_FOLDER);      /* Add output to the fullFileName*/
+    strcat(fullFileName, "\\");               /* Add \ to the fullFileName*/
     strcat(fullFileName, basename(filePath)); /* Copy fileName into fullFileName */
     strcat(fullFileName, ".am");              /* Add the .as suffix to fullFileName */
 
@@ -52,7 +50,7 @@ FILE *createStrippedFile(char *filePath)
     stripped_file = fopen(fullFileName, "w+"); /* read and write */
 
     if (stripped_file == NULL)
-        logError("Error! Could not open file %s\n", fullFileName);
+        logError("Could not open file %s\n", fullFileName);
     else
         logInfo("File opened successfully!\n");
 
