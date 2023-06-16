@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "../utils/utils.h"
 #include "reference.h"
 #include "instruction.h"
