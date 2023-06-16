@@ -45,10 +45,10 @@ FILE *createStrippedFile(char *filePath)
 
     strcpy(fullFileName, "output\\");         /* Add output\ to the fullFileName*/
     strcat(fullFileName, basename(filePath)); /* Copy fileName into fullFileName */
-    strcat(fullFileName, ".stripped.as");     /* Add the .as suffix to fullFileName */
+    strcat(fullFileName, ".am");              /* Add the .as suffix to fullFileName */
 
     logInfo("oppening %s\n", fullFileName);
-    stripped_file = fopen(fullFileName, "w"); /* write only */
+    stripped_file = fopen(fullFileName, "w+"); /* read and write */
 
     if (stripped_file == NULL)
         logError("Error! Could not open file %s\n", fullFileName);
@@ -100,8 +100,9 @@ Macros stripMacrosFromSource(FILE *sourceFile, FILE *strippedFile)
             }
         }
         else
-            /* Non macro lines => write to the stripped file */
-            fprintf(strippedFile, "%s", line);
+            /* Non macro & non comment lines => write to the stripped file */
+            if (strstr(line, ";") == NULL)
+                fprintf(strippedFile, "%s", line);
     }
 
     return macros;
@@ -112,11 +113,7 @@ void replaceMacrosWithContent(FILE *strippedFile, Macros macros) {}
 char *getMacroName(char *source)
 {
     char *target, *locationOfMCRO = strstr(source, "mcro");
-    int length = 0, i = 0, j = 0, charactersToMCRO, macroNameLength;
-
-    /* get source length */
-    while (source[i++] != '\0')
-        length++;
+    int length = strlen(source), i = 0, j = 0, charactersToMCRO, macroNameLength;
 
     /* get name length */
     charactersToMCRO = locationOfMCRO - source;
