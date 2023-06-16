@@ -18,8 +18,8 @@ void printFormatted(const char *format, FILE *file, va_list args)
     struct tm *local_time = localtime(&now);
 
     /* Format timestamp */
-    char timestamp[9];
-    strftime(timestamp, sizeof(timestamp), "%H:%M:%S", local_time);
+    char timestamp[20];
+    strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S", local_time);
 
     /* Print timestamp and log message to console */
     printf("[%s] ", timestamp);
