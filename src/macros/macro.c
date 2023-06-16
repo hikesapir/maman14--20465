@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "macro.h"
+#include "../utils/utils.h"
 #include "../logger/logger.h"
 
 FILE *createStrippedFile(char *);
@@ -62,14 +63,14 @@ Macros stripMacrosFromSource(FILE *sourceFile, FILE *strippedFile)
 {
     Macros macros;
     Macro *newMacro;
-    char line[MAX_LINE_LENGTH];
+    char line[LINE_LENGTH];
 
     /* initiate the macros array */
     macros.array = (Macro **)malloc(sizeof(Macro *));
     /* initiate the macros count */
     macros.amountOfMacros = 0;
 
-    while (fgets(line, MAX_LINE_LENGTH, sourceFile))
+    while (fgets(line, LINE_LENGTH, sourceFile))
     {
         /* if the line contains with "mcro" */
         if (strstr(line, "mcro ") != NULL)
@@ -88,7 +89,7 @@ Macros stripMacrosFromSource(FILE *sourceFile, FILE *strippedFile)
             newMacro->amountOfLines = 0;
 
             /* while we did'nt encounter the end of the macro */
-            while (strstr(fgets(line, MAX_LINE_LENGTH, sourceFile), "endmcro") == NULL)
+            while (strstr(fgets(line, LINE_LENGTH, sourceFile), "endmcro") == NULL)
             {
                 /* create new place for the line */
                 newMacro->amountOfLines += 1;
