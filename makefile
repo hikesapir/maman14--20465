@@ -1,13 +1,11 @@
 # Source directories
-SRC_DIR := .
-SRC_SUBDIRS := src
-VALIDATIONS_DIR := $(SRC_SUBDIRS)/validations
-LOGGER_DIR := $(SRC_SUBDIRS)/logger
-MACRO_DIR := $(SRC_SUBDIRS)/macros
+SRC_DIR := src
+VALIDATIONS_DIR := $(SRC_DIR)/validations
+LOGGER_DIR := $(SRC_DIR)/logger
+MACRO_DIR := $(SRC_DIR)/macros
 
 # Source files
 SRCS := $(wildcard $(SRC_DIR)/*.c)
-SRCS += $(foreach dir,$(SRC_SUBDIRS),$(wildcard $(dir)/*.c))
 VALIDATIONS_SRCS := $(wildcard $(VALIDATIONS_DIR)/*.c)
 LOGGER_SRCS := $(wildcard $(LOGGER_DIR)/*.c)
 MACRO_SRCS := $(wildcard $(MACRO_DIR)/*.c)
