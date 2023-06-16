@@ -3,6 +3,7 @@
 
 typedef struct instruction
 {
+    char *symbol;
     /* IMPLEMENTATION */
     /* IMPLEMENTATION */
     /* IMPLEMENTATION */
