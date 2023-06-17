@@ -12,7 +12,7 @@ FILE *validateFile(char *fileName)
     strcpy(fullFileName, fileName); /* Copy fileName into fullFileName */
     strcat(fullFileName, ".as");    /* Add a .as to fullFileName */
 
-    logInfo("oppening %s\n", fullFileName);
+    logInfo("oppening (%s)\n", fullFileName);
     source_file = fopen(fullFileName, "r"); /* read only */
 
     /* test for file not existing. */

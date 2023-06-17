@@ -52,7 +52,7 @@ FILE *createStrippedFile(char *filePath)
     strcat(fullFileName, basename(filePath)); /* Copy fileName into fullFileName */
     strcat(fullFileName, ".am");              /* Add the .am suffix to fullFileName */
 
-    logInfo("oppening %s\n", fullFileName);
+    logInfo("oppening (%s)\n", fullFileName);
     stripped_file = fopen(fullFileName, "w+"); /* read and write */
 
     if (stripped_file == NULL)
