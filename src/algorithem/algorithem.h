@@ -3,8 +3,14 @@
 
 #include <stdio.h>
 #include "instruction.h"
+#include "reference.h"
 
-/**/
-Instructions destructureFile(FILE *);
+typedef struct destructuredFile
+{
+    Instructions instructions;
+    Reference externs, entries;
+} DestructuredFile;
+
+DestructuredFile destructureFile(FILE *);
 
 #endif

@@ -26,7 +26,7 @@ Input:
     char *: a pointer to the new stripped file name
 
 Output:
-    returns a pointer to a new .as new FILE containing the stripped code
+    returns a pointer to a new .am new FILE containing the stripped code
 */
 FILE *stripMacros(FILE *, char *);
 

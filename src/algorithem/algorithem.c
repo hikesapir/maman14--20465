@@ -3,18 +3,18 @@
 #include <string.h>
 
 #include "../utils/utils.h"
-#include "reference.h"
-#include "instruction.h"
+#include "algorithem.h"
 
 void insertNewExtern(char *, Reference);
 void insertNewEntry(char *, Reference);
 void insertNewInstruction(char *, Instructions);
 
-Instructions destructureFile(FILE *file)
+DestructuredFile destructureFile(FILE *file)
 {
     char line[LINE_LENGTH];
-    Reference externs, entries;
-    Instructions instructions;
+    DestructuredFile destructuredFile;
+    Reference externs = destructuredFile.externs, entries = destructuredFile.entries;
+    Instructions instructions = destructuredFile.instructions;
 
     /* init the externs, entries and instructions */
     externs.array = (char **)malloc(sizeof(char *));
@@ -26,7 +26,6 @@ Instructions destructureFile(FILE *file)
     instructions.array = (Instruction **)malloc(sizeof(Instruction *));
     instructions.amount = 0;
 
-    /* first scan: get all externs, entries and instructions lists */
     while (fgets(line, LINE_LENGTH, file))
     {
         /* if the line contains ".exter"*/
@@ -40,16 +39,7 @@ Instructions destructureFile(FILE *file)
             insertNewInstruction(line, instructions);
     }
 
-    /* Reset the file pointer to the beginning of the file */
-    fseek(file, 0, SEEK_SET);
-
-    /* second scan (instructions.array): place externs and entries to files and instructions unknown binary */
-    /* IMPLEMENTATION */
-    /* IMPLEMENTATION */
-    /* IMPLEMENTATION */
-    /* IMPLEMENTATION */
-
-    return instructions;
+    return destructuredFile;
 }
 
 void insertNewExtern(char *line, Reference externs) {}

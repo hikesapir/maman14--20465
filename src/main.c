@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 {
     int i;
     FILE *file;
-    Instructions instructions;
+    DestructuredFile destructuredFile;
 
     /* Run the script */
     if (argc == 1)
@@ -24,9 +24,14 @@ int main(int argc, char *argv[])
         file = validateFile(argv[i]);
         if (file != NULL)
         {
-            /* START OF FILE USAGE */
+            /* replace macros with their contents */
             file = stripMacros(file, argv[i]);
-            instructions = destructureFile(file);
+
+            /* first scan: get all externs, entries and instructions lists */
+            destructuredFile = destructureFile(file);
+
+            /* second scan (destructuredFile): place externs and entries to files and instructions unknown binary */
+
             /*...*/
             /*...*/
             /*...*/
