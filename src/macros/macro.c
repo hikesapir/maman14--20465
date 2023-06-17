@@ -4,17 +4,23 @@
 #include <libgen.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <stdbool.h>
 
 #include "macro.h"
+#include "../utils/utils.h"
 #include "../logger/logger.h"
 
 FILE *createStrippedFile(char *);
 Macros stripMacrosFromSource(FILE *, FILE *);
 void replaceMacrosWithContent(FILE *, Macros);
 char *getMacroName(char *);
+void freeMacros(Macros);
 
 FILE *stripMacros(FILE *sourceFile, char *filePath)
 {
+    int macroIndex = 0;
+
     /* Create the new stripped file */
     FILE *stripped_file = createStrippedFile(filePath);
 
@@ -25,10 +31,11 @@ FILE *stripMacros(FILE *sourceFile, char *filePath)
     fclose(sourceFile);
 
     /* replace every macro instance with the corresponding lines */
-    replaceMacrosWithContent(stripped_file, macros);
+    if (macros.amountOfMacros > 0)
+        replaceMacrosWithContent(stripped_file, macros);
 
     /* free macros resources (end of usage) */
-    free(macros.array);
+    freeMacros(macros);
 
     return stripped_file;
 }
@@ -38,20 +45,18 @@ FILE *createStrippedFile(char *filePath)
     FILE *stripped_file;
     char fullFileName[PATH_MAX];
 
-    /* create output direrctory if not exists */
-    struct stat st;
-    if (stat("output", &st) == -1)
-        mkdir("output");
+    createDirIfNotExists(OUTPUT_FOLDER);
 
-    strcpy(fullFileName, "output\\");         /* Add output\ to the fullFileName*/
+    strcpy(fullFileName, OUTPUT_FOLDER);      /* Add output to the fullFileName*/
+    strcat(fullFileName, "\\");               /* Add \ to the fullFileName*/
     strcat(fullFileName, basename(filePath)); /* Copy fileName into fullFileName */
-    strcat(fullFileName, ".am");              /* Add the .as suffix to fullFileName */
+    strcat(fullFileName, ".am");              /* Add the .am suffix to fullFileName */
 
     logInfo("oppening %s\n", fullFileName);
     stripped_file = fopen(fullFileName, "w+"); /* read and write */
 
     if (stripped_file == NULL)
-        logError("Error! Could not open file %s\n", fullFileName);
+        logError("Could not open file %s\n", fullFileName);
     else
         logInfo("File opened successfully!\n");
 
@@ -62,14 +67,14 @@ Macros stripMacrosFromSource(FILE *sourceFile, FILE *strippedFile)
 {
     Macros macros;
     Macro *newMacro;
-    char line[MAX_LINE_LENGTH];
+    char line[LINE_LENGTH];
 
     /* initiate the macros array */
     macros.array = (Macro **)malloc(sizeof(Macro *));
     /* initiate the macros count */
     macros.amountOfMacros = 0;
 
-    while (fgets(line, MAX_LINE_LENGTH, sourceFile))
+    while (fgets(line, LINE_LENGTH, sourceFile))
     {
         /* if the line contains with "mcro" */
         if (strstr(line, "mcro ") != NULL)
@@ -87,8 +92,8 @@ Macros stripMacrosFromSource(FILE *sourceFile, FILE *strippedFile)
             /* set the macro's LinesCount */
             newMacro->amountOfLines = 0;
 
-            /* while we did'nt encounter the end of the macro */
-            while (strstr(fgets(line, MAX_LINE_LENGTH, sourceFile), "endmcro") == NULL)
+            /* while we didn't encounter the end of the macro */
+            while (strstr(fgets(line, LINE_LENGTH, sourceFile), "endmcro") == NULL)
             {
                 /* create new place for the line */
                 newMacro->amountOfLines += 1;
@@ -108,25 +113,105 @@ Macros stripMacrosFromSource(FILE *sourceFile, FILE *strippedFile)
     return macros;
 }
 
-void replaceMacrosWithContent(FILE *strippedFile, Macros macros) {}
+void replaceMacrosWithContent(FILE *strippedFile, Macros macros)
+{
+    int macroI, ContentI;
+    Macro *currentMacro;
+    char line[LINE_LENGTH], tempFileName[] = "output/temp.txt";
+    bool lineContainsMacro = false;
+    FILE *tempFile;
+
+    /* Open a temporary file for writing */
+    logInfo("creating temporary file for macro replacements (%s)\n", tempFileName);
+    tempFile = fopen(tempFileName, "w+");
+    if (tempFile == NULL)
+    {
+        logError("creating temporary file failed (%s)\n", tempFileName);
+        return;
+    }
+
+    /* Reset the file pointer to the start of the file */
+    rewind(strippedFile);
+
+    /* foreach line in file */
+    while (fgets(line, LINE_LENGTH, strippedFile))
+    {
+        lineContainsMacro = false;
+
+        /* foreach macro in macros */
+        for (macroI = 0; macroI < macros.amountOfMacros; macroI++)
+        {
+            currentMacro = macros.array[macroI];
+            /* if the line contains the macro name */
+            if (strstr(line, currentMacro->name) != NULL)
+            {
+                lineContainsMacro = true;
+
+                /* replace macro name with macro lines */
+                for (ContentI = 0; ContentI < currentMacro->amountOfLines; ContentI++)
+                    fprintf(tempFile, "%s", currentMacro->content[ContentI]);
+
+                /* macro found and replaced - we can break from the macro loop */
+                break;
+            }
+        }
+
+        /* if macro not found in current line we want this line intact in the tempfile */
+        if (!lineContainsMacro)
+            fprintf(tempFile, "%s", line);
+    }
+
+    /* Reset the files pointers */
+    rewind(strippedFile);
+    rewind(tempFile);
+
+    /* Write the modified content back to the file */
+    while (fgets(line, LINE_LENGTH, tempFile))
+        fprintf(strippedFile, "%s", line);
+
+    /* Remove temp file */
+    fclose(tempFile);
+    remove(tempFileName);
+}
 
 char *getMacroName(char *source)
 {
-    char *target, *locationOfMCRO = strstr(source, "mcro");
-    int length = strlen(source), i = 0, j = 0, charactersToMCRO, macroNameLength;
+    char *target, *locationOfMCRO = strstr(source, "mcro ");
+    int sourceLength = 0, i = 0, j = 0, charactersToMCRO, macroNameLength;
 
-    /* get name length */
+    /* Strip the newline character "mcro <MACRO NAME>\n" => "mcro <MACRO NAME>" */
+    source[strcspn(source, "\n")] = 0;
+
+    sourceLength = strlen(source);
+
+    /* get macro name length */
     charactersToMCRO = locationOfMCRO - source;
-    macroNameLength = length - charactersToMCRO - 5;
+    macroNameLength = sourceLength - charactersToMCRO - 5;
 
     target = malloc((macroNameLength) * sizeof(char));
 
-    /* "mcro <MACRO NAME>\n" */
-    for (i = charactersToMCRO + 5, j = 0; i <= (length - 2); i++, j++)
+    /* "mcro <MACRO NAME>" */
+    for (i = charactersToMCRO + 5, j = 0; i <= sourceLength; i++, j++)
         target[j] = source[i];
 
     /* assign NULL at the end of string */
     target[j] = '\0';
 
     return target;
+}
+
+void freeMacros(Macros macros)
+{
+    /* init macro index and content index */
+    int Mi, Ci;
+
+    for (Mi = 0; Mi < macros.amountOfMacros; Mi++)
+    {
+        free(macros.array[Mi]->name);
+        for (Ci = 0; Ci < macros.array[Mi]->amountOfLines; Ci++)
+            free(macros.array[Mi]->content[Ci]);
+        free(macros.array[Mi]->content);
+        free(macros.array[Mi]);
+    }
+    free(macros.array);
 }

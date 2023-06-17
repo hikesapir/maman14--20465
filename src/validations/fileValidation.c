@@ -17,7 +17,7 @@ FILE *validateFile(char *fileName)
 
     /* test for file not existing. */
     if (source_file == NULL)
-        logError("Error! Could not open file %s\n", fullFileName);
+        logError("Could not open file %s\n", fullFileName);
     else
         logInfo("File opened successfully!\n");
 

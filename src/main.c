@@ -3,11 +3,14 @@
 #include "validations/fileValidation.h"
 #include "macros/macro.h"
 #include "logger/logger.h"
+#include "algorithem/algorithem.h"
+#include "algorithem/instruction.h"
 
 int main(int argc, char *argv[])
 {
     int i;
     FILE *file;
+    Instructions instructions;
 
     /* Run the script */
     if (argc == 1)
@@ -23,6 +26,7 @@ int main(int argc, char *argv[])
         {
             /* START OF FILE USAGE */
             file = stripMacros(file, argv[i]);
+            instructions = destructureFile(file);
             /*...*/
             /*...*/
             /*...*/
