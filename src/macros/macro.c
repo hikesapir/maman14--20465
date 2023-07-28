@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <sys/stat.h>
-#include <limits.h>
 #include <libgen.h>
 #include <stdlib.h>
 #include <string.h>
@@ -19,8 +18,6 @@ void freeMacros(Macros);
 
 FILE *stripMacros(FILE *sourceFile, char *filePath)
 {
-    int macroIndex = 0;
-
     /* Create the new stripped file */
     FILE *stripped_file = createStrippedFile(filePath);
 
@@ -52,13 +49,13 @@ FILE *createStrippedFile(char *filePath)
     strcat(fullFileName, basename(filePath)); /* Copy fileName into fullFileName */
     strcat(fullFileName, ".am");              /* Add the .am suffix to fullFileName */
 
-    logInfo("oppening %s\n", fullFileName);
+    logInfo("oppening %s", fullFileName);
     stripped_file = fopen(fullFileName, "w+"); /* read and write */
 
     if (stripped_file == NULL)
-        logError("Could not open file %s\n", fullFileName);
+        logError("Could not open file %s", fullFileName);
     else
-        logInfo("File opened successfully!\n");
+        logInfo("File opened successfully!");
 
     return stripped_file;
 }
@@ -122,11 +119,11 @@ void replaceMacrosWithContent(FILE *strippedFile, Macros macros)
     FILE *tempFile;
 
     /* Open a temporary file for writing */
-    logInfo("creating temporary file for macro replacements (%s)\n", tempFileName);
+    logInfo("creating temporary file for macro replacements (%s)", tempFileName);
     tempFile = fopen(tempFileName, "w+");
     if (tempFile == NULL)
     {
-        logError("creating temporary file failed (%s)\n", tempFileName);
+        logError("creating temporary file failed (%s)", tempFileName);
         return;
     }
 

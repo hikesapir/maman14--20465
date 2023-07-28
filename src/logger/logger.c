@@ -18,7 +18,7 @@ void printFormatted(const char *format, va_list args)
 
     /* Format timestamp */
     char timestamp[20];
-    strftime(timestamp, sizeof(timestamp), "%H:%M:%S", local_time);
+    strftime(timestamp, sizeof(timestamp), "%d/%m/%y %H:%M:%S", local_time);
 
     /* Print timestamp and log message to console */
     printf("[%s] ", timestamp);
@@ -45,6 +45,7 @@ void logInfo(const char *info, ...)
 
     strcpy(fullMessage, "INFO: "); /* Copy INFO into fullMessage */
     strcat(fullMessage, info);     /* Add the error to fullMessage */
+    strcat(fullMessage, "\n");     /* Add the \n to fullMessage */
 
     va_start(args, info);
     printFormatted(fullMessage, args);
@@ -58,6 +59,7 @@ void logError(const char *error, ...)
 
     strcpy(fullMessage, "ERROR: "); /* Copy ERROR into fullMessage */
     strcat(fullMessage, error);     /* Add the error to fullMessage */
+    strcat(fullMessage, "\n");      /* Add the \n to fullMessage */
 
     va_start(args, error);
     printFormatted(fullMessage, args);

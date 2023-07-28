@@ -1,8 +1,8 @@
 #include <string.h>
 #include <stdio.h>
-#include <limits.h>
 #include "fileValidation.h"
 #include "../logger/logger.h"
+#include "../utils/utils.h"
 
 FILE *validateFile(char *fileName)
 {
@@ -12,14 +12,14 @@ FILE *validateFile(char *fileName)
     strcpy(fullFileName, fileName); /* Copy fileName into fullFileName */
     strcat(fullFileName, ".as");    /* Add a .as to fullFileName */
 
-    logInfo("oppening %s\n", fullFileName);
+    logInfo("oppening %s", fullFileName);
     source_file = fopen(fullFileName, "r"); /* read only */
 
     /* test for file not existing. */
     if (source_file == NULL)
-        logError("Could not open file %s\n", fullFileName);
+        logError("Could not open file %s", fullFileName);
     else
-        logInfo("File opened successfully!\n");
+        logInfo("File opened successfully!");
 
     return source_file;
 }

@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     /* Run the script */
     if (argc == 1)
     {
-        logError("No filename entered :(\n");
+        logError("No filename entered :(");
         exit(-1);
     }
 
