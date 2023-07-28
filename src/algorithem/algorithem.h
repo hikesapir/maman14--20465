@@ -5,6 +5,6 @@
 #include "instruction.h"
 
 /**/
-Instructions destructureFile(FILE *);
+Commands destructureFile(FILE *);
 
 #endif
