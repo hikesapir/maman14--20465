@@ -4,7 +4,7 @@
 #include "macros/macro.h"
 #include "logger/logger.h"
 #include "algorithem/algorithem.h"
-#include "algorithem/instruction.h"
+#include "algorithem/command.h"
 
 int main(int argc, char *argv[])
 {

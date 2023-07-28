@@ -2,7 +2,7 @@
 #define ALGORITHEM_H
 
 #include <stdio.h>
-#include "instruction.h"
+#include "command.h"
 
 /**/
 Commands destructureFile(FILE *);
