@@ -4,83 +4,119 @@
 #include <ctype.h>
 
 #include "../utils/utils.h"
-#include "reference.h"
+#include "symbol.h"
 #include "command.h"
-#include "label.h"
 #include "../logger/logger.h"
+#include <stdbool.h>
 
-/*
- * Function to insert a new reference into the Reference structure
+/**
+ * Inserts a new symbol into the Symbols structure based on the given line and type.
  *
- * This function trims leading and trailing spaces from the 'line' and then slices the string
- * starting from 'symbol_length'. It then adds the sliced string into the 'reference.array'.
- * The function also increases the 'reference.amount' to reflect the new number of references.
- * It logs the processed line using the 'logInfo' function.
+ * This function extracts the symbol name from the provided line and inserts it into
+ * the Symbols structure with the given symbol type. It first trims leading and trailing
+ * spaces from the line and then processes the line to extract the symbol name before
+ * adding it to the Symbols structure.
  *
- * Input:
- *     line: A pointer to the input line containing the reference to be inserted
- *     reference: The Reference structure to which the new reference is to be inserted
- *     symbol_length: The length of the symbol to be sliced and added to the 'reference.array'
- *
- * Note: The 'reference.array' should be initialized appropriately before calling this function.
- *
- * The 'line' pointer is modified during the process, pointing to the remaining part after slicing.
- * The caller should ensure that 'line' points to a valid memory region.
- *
- * The 'reference.array' is updated dynamically, and the caller is responsible for freeing the memory
- * using 'free' when it's no longer needed.
+ * @param line The line containing the symbol declaration (e.g., ".extern symbol_name").
+ * @param symbols A pointer to the Symbols structure to which the new symbol will be added.
+ * @param symbol_length The length of the symbol type declaration (e.g., strlen(".extern\0")).
+ * @param type The type of the new symbol to be added.
  */
-void insertNewReference(char *, Reference, size_t);
-void insertNewInstruction(char *, Commands, int *);
-void insertNewLabel(char *, Labels, int);
+void insertNewSymbol(char *, Symbols *, size_t, SYMBOL_TYPE);
+/**
+ * Inserts a new command into the Commands structure based on the given line and address.
+ *
+ * This function processes the given line to extract and parse the command information.
+ * It then adds the parsed command to the Commands structure with the provided address.
+ *
+ * @param line The line containing the command information to be parsed and added.
+ * @param commands The Commands structure to which the new command will be added.
+ * @param decimal_address The decimal address associated with the command.
+ */
+void insertNewCommand(char *, Commands, int *);
+/**
+ * Inserts a new label symbol into the Symbols structure with the given address.
+ *
+ * This function extracts the label name from the provided line and inserts it into
+ * the Symbols structure with the LABEL type and the given decimal address. It trims
+ * leading and trailing spaces from the line and processes it to extract the label name.
+ *
+ * @param line The line containing the label declaration (e.g., "label_name:").
+ * @param symbols A pointer to the Symbols structure to which the new label symbol will be added.
+ * @param decimal_address The decimal address associated with the label.
+ */
+void insertNewLabel(char *, Symbols *, int);
+/**
+ * Adds a new symbol to the Symbols structure if it is valid.
+ *
+ * This function attempts to add a new symbol to the Symbols structure. Before adding,
+ * it calls the newSymbolIsValid() function to check if the symbol is valid and doesn't
+ * violate any rules (e.g., duplicate name, spaces in the name). If the symbol is valid,
+ * it is added to the structure.
+ *
+ * @param symbols A pointer to the Symbols structure to which the new symbol will be added.
+ * @param name The name of the new symbol to be added.
+ * @param type The type of the new symbol to be added.
+ */
+void addNewSymbol(Symbols *, char *, SYMBOL_TYPE);
+/**
+ * Checks if a new symbol is valid and can be added to the Symbols structure.
+ *
+ * This function checks if the provided symbol name is valid for insertion into the Symbols
+ * structure. It verifies that the symbol name doesn't already exist in the structure with
+ * the same type (except for LABEL type, which allows duplicates). It also ensures that the
+ * symbol name doesn't contain spaces.
+ *
+ * @param symbols A pointer to the Symbols structure containing existing symbols.
+ * @param name The name of the new symbol to be checked for validity.
+ * @param type The type of the new symbol to be checked for validity.
+ * @return Returns true if the new symbol is valid, false otherwise.
+ */
+bool newSymbolIsValid(Symbols *, char *, SYMBOL_TYPE);
 
 Commands destructureFile(FILE *file)
 {
-    char line[LINE_LENGTH];
-    int decimal_address = 100;
-    Reference externs, entries;
-    Commands commands;
-    Labels labels;
+    char line[LINE_LENGTH];    /* Buffer to store each line of the input file */
+    int decimal_address = 100; /* Starting address for commands */
+    Symbols symbols;           /* Structure to store different symbols found in the file */
+    Commands commands;         /* Structure to store the parsed commands from the file */
 
-    /* init the externs, entries and commands */
-
-    externs.array = (char **)malloc(sizeof(char *));
-    externs.amount = 0;
-
-    entries.array = (char **)malloc(sizeof(char *));
-    entries.amount = 0;
+    /* Initialize the symbols and commands structures */
+    symbols.array = (Symbol **)malloc(sizeof(Symbol *));
+    symbols.amount = 0;
 
     commands.array = (Command **)malloc(sizeof(Command *));
     commands.amount = 0;
 
-    labels.array = (Label **)malloc(sizeof(Label *));
-    labels.amount = 0;
-
-    /* Reset the file pointers */
+    /* Reset the file pointer to the beginning of the file */
     rewind(file);
 
-    /* first scan: get all externs, entries and commands lists */
+    /* First scan: Get all externs, entries, labels, and commands */
     while (fgets(line, LINE_LENGTH, file))
     {
-        /* if the line contains ".exter"*/
+        /* If the line contains ".extern" */
         if (strstr(line, ".extern") != NULL)
-            insertNewReference(line, externs, strlen(".extern\0"));
-        /* if the line contains ".entry"*/
+            insertNewSymbol(line, &symbols, strlen(".extern\0"), EXTERN);
+
+        /* If the line contains ".entry" */
         else if (strstr(line, ".entry") != NULL)
-            insertNewReference(line, entries, strlen(".entry\0"));
-        /* The line contains an instruction */
+            insertNewSymbol(line, &symbols, strlen(".entry\0"), ENTRY);
+
+        /* If the line contains a label (indicated by a colon) */
         else if (strstr(line, ":") != NULL)
         {
-            insertNewLabel(line, labels, decimal_address);
-            insertNewInstruction(line, commands, &decimal_address);
+            /* Insert the new label symbol and the associated command */
+            insertNewLabel(line, &symbols, decimal_address);
+            insertNewCommand(line, commands, &decimal_address);
         }
-        /* The line contains an instruction */
+
+        /* If the line contains an instruction or a command */
         else
-            insertNewInstruction(line, commands, &decimal_address);
+            insertNewCommand(line, commands, &decimal_address);
     }
 
     /* Reset the file pointer to the beginning of the file */
-    fseek(file, 0, SEEK_SET);
+    rewind(file);
 
     /* second scan (commands.array): place externs and entries to files and commands unknown binary */
     /* IMPLEMENTATION */
@@ -91,7 +127,64 @@ Commands destructureFile(FILE *file)
     return commands;
 }
 
-void insertNewReference(char *line, Reference reference, size_t symbol_length)
+bool newSymbolIsValid(Symbols *symbols, char *name, SYMBOL_TYPE type)
+{
+    int i;
+    Symbol *symbol;
+    bool name_exists, same_type, has_spaces, both_not_labels;
+
+    for (i = 0; i < symbols->amount; i++)
+    {
+        symbol = symbols->array[i];
+        name_exists = strcmp(symbol->name, name) == 0;
+        same_type = symbol->type == type;
+        has_spaces = strstr(name, " ") != NULL;
+        both_not_labels = type != LABEL && symbol->type != LABEL;
+
+        /* Check for duplicate names with the same type (or same type except LABEL type) in the Symbols structure */
+        if (name_exists && (both_not_labels || same_type))
+        {
+            logError("Duplicat symbols '%s' found", name);
+            return false;
+        }
+
+        /* Check for names with spaces, which are invalid for symbols */
+        if (has_spaces)
+        {
+            logError("Name '%s' has spaces", name);
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void addNewSymbol(Symbols *symbols, char *name, SYMBOL_TYPE type)
+{
+    Symbol *new_symbol = NULL;
+
+    /* Check if the new symbol is valid before adding */
+    if (newSymbolIsValid(symbols, name, type))
+    {
+        /* Increment the amount of symbols */
+        symbols->amount += 1;
+
+        /* Reallocate memory for the Symbols array to accommodate the new symbol */
+        symbols->array = (Symbol **)realloc(symbols->array, symbols->amount * sizeof(Symbol *));
+
+        /* Allocate memory for the new symbol and add it to the Symbols array */
+        symbols->array[symbols->amount - 1] = malloc(sizeof(Symbol));
+        new_symbol = symbols->array[symbols->amount - 1];
+
+        /* Allocate memory for the new symbol name and set its properties */
+        new_symbol->name = malloc((strlen(name) + 1) * sizeof(char));
+        strcpy(new_symbol->name, name);
+        new_symbol->decimal_address = 0;
+        new_symbol->type = type;
+    }
+}
+
+void insertNewSymbol(char *line, Symbols *symbols, size_t symbol_length, SYMBOL_TYPE type)
 {
     /* Trim leading and trailing spaces from 'line' */
     line = trim(line);
@@ -102,16 +195,31 @@ void insertNewReference(char *line, Reference reference, size_t symbol_length)
     /* Trim leading and trailing spaces from the sliced string */
     line = trim(line);
 
-    /* Increment the amount of references */
-    reference.amount += 1;
-
-    /* Reallocate memory for the 'reference.array' to accommodate the new reference */
-    reference.array = (char **)realloc(reference.array, reference.amount * sizeof(char *));
-    reference.array[reference.amount - 1] = malloc(strlen(line));
-
-    /* Save the line into the macro's content */
-    strcpy(reference.array[reference.amount - 1], line);
+    /* Add the new symbol to the Symbols structure */
+    addNewSymbol(symbols, line, type);
 }
 
-void insertNewLabel(char *line, Labels labels, int decimal_address) {}
-void insertNewInstruction(char *line, Commands commands, int *decimal_address) {}
+void insertNewLabel(char *line, Symbols *symbols, int decimal_address)
+{
+    char *label = NULL, *colon_ptr = NULL;
+    int size_of_label = 0;
+
+    /* Trim leading and trailing spaces from 'line' */
+    line = trim(line);
+
+    /* Find the position of the colon (:) in the line to determine the label's size */
+    colon_ptr = strstr(line, ":");
+
+    /* Calculate the size of the label (number of characters before the colon) */
+    size_of_label = colon_ptr - line;
+
+    /* Allocate memory for the label and copy its name from 'line' */
+    label = malloc(sizeof(char) * (size_of_label + 1));
+    memcpy(label, line, size_of_label);
+    label[size_of_label] = '\0';
+
+    /* Add the new label symbol to the Symbols structure */
+    addNewSymbol(symbols, label, LABEL);
+}
+
+void insertNewCommand(char *line, Commands commands, int *decimal_address) {}
