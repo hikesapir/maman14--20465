@@ -4,5 +4,4 @@
 .vscode
 
 logs/*
-input/*
 output/*
