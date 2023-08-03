@@ -58,7 +58,7 @@ void insertNewLabel(char *, Symbols *, int);
  * @param name The name of the new symbol to be added.
  * @param type The type of the new symbol to be added.
  */
-void addNewSymbol(Symbols *, char *, SYMBOL_TYPE);
+void addNewSymbol(Symbols *, char *, SYMBOL_TYPE, int);
 /**
  * Checks if a new symbol is valid and can be added to the Symbols structure.
  *
@@ -74,12 +74,14 @@ void addNewSymbol(Symbols *, char *, SYMBOL_TYPE);
  */
 bool newSymbolIsValid(Symbols *, char *, SYMBOL_TYPE);
 
+Command_Type get_command_type(char *);
+
 Commands destructureFile(FILE *file)
 {
-    char line[LINE_LENGTH];    /* Buffer to store each line of the input file */
-    int decimal_address = 100; /* Starting address for commands */
-    Symbols symbols;           /* Structure to store different symbols found in the file */
-    Commands commands;         /* Structure to store the parsed commands from the file */
+    char line[LINE_LENGTH], *colon_ptr; /* Buffer to store each line of the input file */
+    int decimal_address = 100;          /* Starting address for commands */
+    Symbols symbols;                    /* Structure to store different symbols found in the file */
+    Commands commands;                  /* Structure to store the parsed commands from the file */
 
     /* Initialize the symbols and commands structures */
     symbols.array = (Symbol **)malloc(sizeof(Symbol *));
@@ -107,7 +109,10 @@ Commands destructureFile(FILE *file)
         {
             /* Insert the new label symbol and the associated command */
             insertNewLabel(line, &symbols, decimal_address);
-            insertNewCommand(line, commands, &decimal_address);
+
+            colon_ptr = strstr(line, ":");
+
+            insertNewCommand(colon_ptr + 1, commands, &decimal_address);
         }
 
         /* If the line contains an instruction or a command */
@@ -159,7 +164,7 @@ bool newSymbolIsValid(Symbols *symbols, char *name, SYMBOL_TYPE type)
     return true;
 }
 
-void addNewSymbol(Symbols *symbols, char *name, SYMBOL_TYPE type)
+void addNewSymbol(Symbols *symbols, char *name, SYMBOL_TYPE type, int decimal_address)
 {
     Symbol *new_symbol = NULL;
 
@@ -181,6 +186,7 @@ void addNewSymbol(Symbols *symbols, char *name, SYMBOL_TYPE type)
         strcpy(new_symbol->name, name);
         new_symbol->decimal_address = 0;
         new_symbol->type = type;
+        new_symbol->decimal_address = decimal_address;
     }
 }
 
@@ -196,7 +202,7 @@ void insertNewSymbol(char *line, Symbols *symbols, size_t symbol_length, SYMBOL_
     line = trim(line);
 
     /* Add the new symbol to the Symbols structure */
-    addNewSymbol(symbols, line, type);
+    addNewSymbol(symbols, line, type, 0);
 }
 
 void insertNewLabel(char *line, Symbols *symbols, int decimal_address)
@@ -219,7 +225,37 @@ void insertNewLabel(char *line, Symbols *symbols, int decimal_address)
     label[size_of_label] = '\0';
 
     /* Add the new label symbol to the Symbols structure */
-    addNewSymbol(symbols, label, LABEL);
+    addNewSymbol(symbols, label, LABEL, decimal_address);
 }
 
-void insertNewCommand(char *line, Commands commands, int *decimal_address) {}
+void insertNewCommand(char *line, Commands commands, int *decimal_address)
+{
+    Command_Type ctype = MOV;
+
+    /* Trim leading and trailing spaces from 'line' */
+    line = trim(line);
+
+    ctype = get_command_type(line);
+}
+
+Command_Type get_command_type(char *line)
+{
+    int i = 0, length = 0, amount_of_command_defs = 0;
+    char *command_name;
+
+    /* run until reached white space or end of the string*/
+    while (!isspace(line[length]) && line[length] != '\0')
+        length++;
+
+    command_name = malloc(sizeof(char) * (length + 1));
+    strncpy(command_name, line, length);
+    command_name[length] = '\0';
+
+    amount_of_command_defs = sizeof(command_definition) / sizeof(CMD_Definition);
+    for (i = 0; i < amount_of_command_defs; i++)
+        if (strcmp(command_definition[i].name, command_name) == 0)
+            return command_definition[i].type;
+
+    logError("Undefined Command: %s", command_name);
+    return INVALID;
+}
