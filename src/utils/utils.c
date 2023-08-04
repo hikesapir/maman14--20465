@@ -1,6 +1,7 @@
 #include <sys/stat.h>
 #include <ctype.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "utils.h"
 
@@ -39,4 +40,13 @@ char *trim(char *str)
     end[1] = '\0';
 
     return str;
+}
+
+/* checks if a given string is a number */
+bool is_numeric(char *str)
+{
+    int len;
+    float ignore;
+    int ret = sscanf(str, "%f%n", &ignore, &len);
+    return ret && len == strlen(str);
 }

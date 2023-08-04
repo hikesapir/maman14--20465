@@ -7,9 +7,16 @@
 #define LOGGER_FOLDER "logs"
 #define FILE_SIZE 1024
 #define PATH_MAX 260
+#define ARGUMENTS_DELIMITER ","
 
 /* Typedefs */
 typedef char line[LINE_LENGTH];
+
+typedef enum
+{
+    true = 1,
+    false = 0
+} bool;
 
 /*
  * Function to create a directory if it does not exist
@@ -43,5 +50,7 @@ char *slice(char *, int);
  *    The function modifies the original string directly, so no memory is dynamically allocated.
  */
 char *trim(char *);
+
+bool is_numeric(char *);
 
 #endif /* UTILS_H */

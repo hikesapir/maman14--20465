@@ -1,8 +1,8 @@
-#ifndef ALGORITHEM_H
-#define ALGORITHEM_H
+#ifndef LOGIC_H
+#define LOGIC_H
 
 #include <stdio.h>
-#include "command.h"
+#include "../command/command.h"
 
 /**
  * Destructures the provided file, extracting symbols and commands from it.

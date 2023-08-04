@@ -3,8 +3,8 @@
 #include "validations/fileValidation.h"
 #include "macros/macro.h"
 #include "logger/logger.h"
-#include "algorithem/algorithem.h"
-#include "algorithem/command.h"
+#include "algorithem/logic/logic.h"
+#include "algorithem/command/command.h"
 
 int main(int argc, char *argv[])
 {
