@@ -1,0 +1,40 @@
+{
+    "files.associations": {
+        "unistd.h": "c",
+        "stdio.h": "c",
+        "stdarg.h": "c",
+        "filevalidation.h": "c",
+        "limits.h": "c",
+        "typeinfo": "c",
+        "utils.h": "c",
+        "reference.h": "c",
+        "instruction.h": "c",
+        "string.h": "c",
+        "time.h": "c",
+        "stdlib.h": "c",
+        "algorithem.h": "c",
+        "stat.h": "c",
+        "logger.h": "c",
+        "compare": "c",
+        "type_traits": "c",
+        "concepts": "c",
+        "cmath": "c",
+        "limits": "c",
+        "new": "c",
+        "ctype.h": "c",
+        "command.h": "c"
+    },
+    "cmake.configureOnOpen": true,
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "C_Cpp.default.compilerPath": "C:/msys64/mingw64/bin/gcc.exe",
+    // "C_Cpp.default.includePath": [
+    //     "${workspaceFolder}/include"
+    // ],
+    "C_Cpp.default.defines": [
+        "_DEBUG",
+        "UNICODE",
+        "_UNICODE"
+    ],
+    "C_Cpp.default.cStandard": "c11",
+    "C_Cpp.default.cppStandard": "c++14"
+}
