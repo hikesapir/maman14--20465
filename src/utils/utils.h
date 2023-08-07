@@ -53,4 +53,6 @@ char *trim(char *);
 
 bool is_numeric(char *);
 
+int decimalToBinary(int );
+
 #endif /* UTILS_H */

@@ -58,7 +58,6 @@ void addNewSymbol(Symbols *symbols, char *name, SYMBOL_TYPE type, int decimal_ad
         /* Allocate memory for the new symbol name and set its properties */
         new_symbol->name = malloc((strlen(name) + 1) * sizeof(char));
         strcpy(new_symbol->name, name);
-        new_symbol->decimal_address = 0;
         new_symbol->type = type;
         new_symbol->decimal_address = decimal_address;
     }

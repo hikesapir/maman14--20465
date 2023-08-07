@@ -34,6 +34,8 @@ typedef enum
 typedef struct argument
 {
     char *name;
+    int decimal_address;
+    int binary_represnt;
     Argument_Type type;
 } Argument;
 
@@ -45,7 +47,9 @@ typedef struct arguments
 
 typedef struct command
 {
-    Command_Type cmd;
+    Command_Type command_type;
+    int decimal_address;
+    int binary_represnt;
     Arguments arguments;
 } Command;
 
@@ -99,7 +103,7 @@ static CMD_Definition command_definition[] = {
  * @param commands The Commands structure to which the new command will be added.
  * @param decimal_address The decimal address associated with the command.
  */
-void insertNewCommand(char *, Commands, int *);
+void insertNewCommand(char *, Commands *, int *);
 
 /**
  * Determine the command type based on the input line.
@@ -119,4 +123,5 @@ char *get_command_type(Command_Type *, char *);
  */
 void get_command_arguments(Arguments *, char *);
 
+void print_arguments(Arguments);
 #endif

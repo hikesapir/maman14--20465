@@ -18,10 +18,11 @@ void print_arguments(Arguments arguments)
     }
 }
 
-void insertNewCommand(char *line, Commands commands, int *decimal_address)
+void insertNewCommand(char *line, Commands *commands, int *decimal_address)
 {
     Command_Type command_type = INVALID;
     Arguments arguments;
+    Command *new_command = NULL;
 
     arguments.amount = 0;
 
@@ -36,11 +37,24 @@ void insertNewCommand(char *line, Commands commands, int *decimal_address)
     /* Trim leading and trailing spaces from 'line' */
     line = trim(line);
 
-    if (command_type != STRING)
+    if (command_type != STRING){
         get_command_arguments(&arguments, line);
+
+    }
     /* else Deal With Strings */
 
-    print_arguments(arguments);
+
+
+    /* add address*/
+    commands->amount++;
+    commands->array = (Command **)realloc(commands->array, commands->amount * sizeof(Command *));
+    commands->array[commands->amount - 1] = malloc(sizeof(Command));
+
+    new_command = commands->array[commands->amount - 1];
+    new_command->command_type = command_type;
+    new_command->arguments = arguments;
+    new_command->decimal_address = *decimal_address;
+    *decimal_address += 1;
 }
 
 char *get_command_type(Command_Type *command_type, char *line)

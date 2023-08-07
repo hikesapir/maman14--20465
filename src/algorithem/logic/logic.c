@@ -8,6 +8,12 @@
 #include "../symbol/symbol.h"
 #include "../command/command.h"
 
+void print_command(Command command)
+{
+    printf("**** new command ****\n command type is: %d place in address: %d\n paramas:", command.command_type, command.decimal_address);
+    print_arguments(command.arguments);
+}
+
 Commands destructureFile(FILE *file)
 {
     char line[LINE_LENGTH], *colon_ptr; /* Buffer to store each line of the input file */
@@ -44,12 +50,17 @@ Commands destructureFile(FILE *file)
 
             colon_ptr = strstr(line, ":");
 
-            insertNewCommand(colon_ptr + 1, commands, &decimal_address);
+            insertNewCommand(colon_ptr + 1, &commands, &decimal_address);
+            print_command(*commands.array[commands.amount - 1]);
         }
 
         /* If the line contains an instruction or a command */
         else
-            insertNewCommand(line, commands, &decimal_address);
+        {
+            insertNewCommand(line, &commands, &decimal_address);
+
+            print_command(*commands.array[commands.amount - 1]);
+        }
     }
 
     /* Reset the file pointer to the beginning of the file */

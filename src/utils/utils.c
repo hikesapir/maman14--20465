@@ -50,3 +50,19 @@ bool is_numeric(char *str)
     int ret = sscanf(str, "%f%n", &ignore, &len);
     return ret && len == strlen(str);
 }
+
+int decimalToBinary(int decimalNumber)
+{
+    int binaryNumber = 0;
+    int base = 1;
+
+    while (decimalNumber > 0)
+    {
+        int remainder = decimalNumber % 2;
+        binaryNumber += remainder * base;
+        decimalNumber /= 2;
+        base *= 10;
+    }
+
+    return binaryNumber;
+}
