@@ -1,6 +1,6 @@
 .entry LENGTH
 .extern W
-MA IN: mov @r3 ,LENGTH
+MA IN: mov @r3 ,LENGTHT
 LOOP : jmp L1
 prn -5.3
 bne W
