@@ -195,7 +195,7 @@ bool arguments_is_valid(Command *command, CMD_Definition command_definition[])
     }
 }
 
-void advance_decimal_adress(Command *command, int *decimal_address, CMD_Definition command_definition[])
+void advance_decimal_adress(Command *command, int *decimal_address)
 {
     int i;
     Argument *argument;
