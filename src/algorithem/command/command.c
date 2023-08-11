@@ -18,18 +18,18 @@ void print_arguments(Arguments arguments)
     }
 }
 
-void insertNewCommand(char *line, Commands *commands, int *decimal_address)
+void insertNewCommand(char *line, Commands *commands, int *decimal_address, CMD_Definition command_definition[])
 {
     Command_Type command_type = INVALID;
     Arguments arguments;
-    Command *new_command = NULL;
+    Command *new_command;
 
     arguments.amount = 0;
 
     /* Trim leading and trailing spaces from 'line' */
     line = trim(line);
 
-    line = get_command_type(&command_type, line);
+    line = get_command_type(&command_type, line, command_definition);
 
     if (command_type == INVALID)
         return;
@@ -37,29 +37,29 @@ void insertNewCommand(char *line, Commands *commands, int *decimal_address)
     /* Trim leading and trailing spaces from 'line' */
     line = trim(line);
 
-    if (command_type != STRING){
-        get_command_arguments(&arguments, line);
-
-    }
-    /* else Deal With Strings */
-
-
-
-    /* add address*/
+    /* add new command*/
     commands->amount++;
     commands->array = (Command **)realloc(commands->array, commands->amount * sizeof(Command *));
     commands->array[commands->amount - 1] = malloc(sizeof(Command));
-
     new_command = commands->array[commands->amount - 1];
+
+    if (command_type == STRING)
+        get_string_command_arguments(new_command, line);
+    else
+        get_command_arguments(&arguments, line);
+
     new_command->command_type = command_type;
     new_command->arguments = arguments;
     new_command->decimal_address = *decimal_address;
+
+    /* advance_decimal_adress(new_command, decimal_address); */
+
     *decimal_address += 1;
 }
 
-char *get_command_type(Command_Type *command_type, char *line)
+char *get_command_type(Command_Type *command_type, char *line, CMD_Definition command_definition[])
 {
-    int i = 0, length = 0, amount_of_command_defs = 0;
+    int i = 0, length = 0;
     char *command_name;
 
     /* Find the length of the command name by scanning until whitespace or end of string */
@@ -71,11 +71,8 @@ char *get_command_type(Command_Type *command_type, char *line)
     strncpy(command_name, line, length);
     command_name[length] = '\0';
 
-    /* Calculate the number of command definitions */
-    amount_of_command_defs = sizeof(command_definition) / sizeof(CMD_Definition);
-
     /* Loop through command definitions to find a match */
-    for (i = 0; i < amount_of_command_defs; i++)
+    for (i = 0; i < CMD_DEFINITIONS_AMOUNT; i++)
         if (strcmp(command_definition[i].name, command_name) == 0)
         {
             *command_type = command_definition[i].type;
@@ -89,6 +86,31 @@ char *get_command_type(Command_Type *command_type, char *line)
     *command_type = INVALID;
     free(command_name); /* Free allocated memory */
     return NULL;
+}
+
+void get_string_command_arguments(Command *command, char *line)
+{
+    Argument *new_argument;
+    Arguments *arguments;
+
+    arguments = &command->arguments;
+
+    if (*line == '\0')
+        return;
+
+    if (*line == '"' && *(line + strlen(line) - 1) == '"')
+    {
+        /* Allocate memory for the arguments array */
+        arguments->arr = (Argument **)malloc(sizeof(Argument *));
+        arguments->amount = 1;
+        arguments->arr[arguments->amount - 1] = malloc(sizeof(Argument));
+        new_argument = arguments->arr[arguments->amount - 1];
+        new_argument->name = malloc((strlen(line) - 1) * sizeof(char));
+        strncpy(new_argument->name, (line + 1), (strlen(line) - 2));
+        new_argument->name[strlen(line) - 2] = '\0';
+    }
+    else
+        command->command_type = INVALID;
 }
 
 void get_command_arguments(Arguments *arguments, char *line)

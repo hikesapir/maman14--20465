@@ -8,6 +8,7 @@
 #define FILE_SIZE 1024
 #define PATH_MAX 260
 #define ARGUMENTS_DELIMITER ","
+#define CMD_DEFINITIONS_AMOUNT 18
 
 /* Typedefs */
 typedef char line[LINE_LENGTH];
@@ -53,6 +54,6 @@ char *trim(char *);
 
 bool is_numeric(char *);
 
-int decimalToBinary(int );
+int decimalToBinary(int);
 
 #endif /* UTILS_H */

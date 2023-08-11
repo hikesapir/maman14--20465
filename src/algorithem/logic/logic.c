@@ -8,18 +8,32 @@
 #include "../symbol/symbol.h"
 #include "../command/command.h"
 
-void print_command(Command command)
-{
-    printf("**** new command ****\n command type is: %d place in address: %d\n paramas:", command.command_type, command.decimal_address);
-    print_arguments(command.arguments);
-}
-
 Commands destructureFile(FILE *file)
 {
     char line[LINE_LENGTH], *colon_ptr; /* Buffer to store each line of the input file */
     int decimal_address = 100;          /* Starting address for commands */
     Symbols symbols;                    /* Structure to store different symbols found in the file */
     Commands commands;                  /* Structure to store the parsed commands from the file */
+
+    CMD_Definition command_definition[] = {
+        {"mov", MOV, 2, ALL_BUT_STATIC, ALL},
+        {"cmp", CMP, 2, ALL, ALL},
+        {"add", ADD, 2, ALL_BUT_STATIC, ALL},
+        {"sub", SUB, 2, ALL_BUT_STATIC, ALL},
+        {"not", NOT, 1, ALL_BUT_STATIC, 0},
+        {"clr", CLR, 1, ALL_BUT_STATIC, 0},
+        {"lea", LEA, 2, ALL_BUT_STATIC, VAR},
+        {"inc", INC, 1, ALL_BUT_STATIC, 0},
+        {"dec", DEC, 1, ALL_BUT_STATIC, 0},
+        {"jmp", JMP, 1, ALL_BUT_STATIC, 0},
+        {"bne", BNE, 1, ALL_BUT_STATIC, 0},
+        {"red", RED, 1, ALL_BUT_STATIC, 0},
+        {"prn", PRN, 1, ALL, 0},
+        {"jsr", JSR, 1, ALL_BUT_STATIC, 0},
+        {"rts", RTS, 0, 0, 0},
+        {"stop", STOP, 0, 0, 0},
+        {".string", STRING, -1, STAT, STAT},
+        {".data", DATA, -1, STAT, STAT}};
 
     /* Initialize the symbols and commands structures */
     symbols.array = (Symbol **)malloc(sizeof(Symbol *));
@@ -50,27 +64,29 @@ Commands destructureFile(FILE *file)
 
             colon_ptr = strstr(line, ":");
 
-            insertNewCommand(colon_ptr + 1, &commands, &decimal_address);
-            print_command(*commands.array[commands.amount - 1]);
+            insertNewCommand(colon_ptr + 1, &commands, &decimal_address, command_definition);
         }
 
         /* If the line contains an instruction or a command */
         else
-        {
-            insertNewCommand(line, &commands, &decimal_address);
-
-            print_command(*commands.array[commands.amount - 1]);
-        }
+            insertNewCommand(line, &commands, &decimal_address, command_definition);
     }
 
     /* Reset the file pointer to the beginning of the file */
     rewind(file);
 
     /* second scan (commands.array): place externs and entries to files and commands unknown binary */
-    /* IMPLEMENTATION */
-    /* IMPLEMENTATION */
-    /* IMPLEMENTATION */
-    /* IMPLEMENTATION */
+
+    /* Do Not Create the files if there is errors */
+
+    /* For each command */
+    /* if there is an unknown variable we will change the command type to INVALID */
+    /* write command as binary */
+
+    /* 2 files () */
+
+    /* write as base 64 from binary */
+    /* Header will bae (amount of command lines, amount of variable lines) */
 
     return commands;
 }
