@@ -7,26 +7,12 @@
 #include "../../utils/utils.h"
 #include "../../logger/logger.h"
 
-void print_arguments(Arguments arguments)
-{
-    Argument *argument;
-    int i = 0;
-    for (i = 0; i < arguments.amount; i++)
-    {
-        argument = arguments.arr[i];
-        printf("%s %d\n", argument->name, argument->type);
-    }
-}
-
 void insertNewCommand(char *line, Commands *commands, int *decimal_address, CMD_Definition command_definition[])
 {
     Command_Type command_type = INVALID;
-    Arguments arguments;
     Command *new_command;
 
-    arguments.amount = 0;
-
-    /* add new command*/
+    /* add new command */
     commands->amount++;
     commands->array = (Command **)realloc(commands->array, commands->amount * sizeof(Command *));
     commands->array[commands->amount - 1] = malloc(sizeof(Command));
@@ -35,6 +21,7 @@ void insertNewCommand(char *line, Commands *commands, int *decimal_address, CMD_
     /* Trim leading and trailing spaces from 'line' */
     line = trim(line);
 
+    /* Identify the command type and set it in the new_command */
     line = get_command_type(&command_type, line, command_definition);
     new_command->command_type = command_type;
 
@@ -47,10 +34,7 @@ void insertNewCommand(char *line, Commands *commands, int *decimal_address, CMD_
     if (command_type == STRING)
         get_string_command_arguments(new_command, line);
     else
-    {
-        get_command_arguments(&arguments, line);
-        new_command->arguments = arguments;
-    }
+        get_command_arguments(&new_command->arguments, line);
 
     if (!arguments_is_valid(new_command, command_definition))
     {
@@ -68,8 +52,9 @@ char *get_command_type(Command_Type *command_type, char *line, CMD_Definition co
     char *command_name;
 
     /* Find the length of the command name by scanning until whitespace or end of string */
-    while (!isspace(line[length]) && line[length] != '\0')
-        length++;
+    while (!isspace(line[i]) && line[i] != '\0')
+        i++;
+    length = i;
 
     /* Allocate memory for the command name and copy it */
     command_name = malloc(sizeof(char) * (length + 1));
@@ -103,6 +88,7 @@ void get_string_command_arguments(Command *command, char *line)
     if (*line == '\0')
         return;
 
+    /* If the input match the expected format */
     if (*line == '"' && *(line + strlen(line) - 1) == '"')
     {
         /* Allocate memory for the arguments array */
@@ -110,6 +96,8 @@ void get_string_command_arguments(Command *command, char *line)
         arguments->amount = 1;
         arguments->arr[arguments->amount - 1] = malloc(sizeof(Argument));
         new_argument = arguments->arr[arguments->amount - 1];
+
+        /* Extract and store the string argument (without quotes) */
         new_argument->name = malloc((strlen(line) - 1) * sizeof(char));
         strncpy(new_argument->name, (line + 1), (strlen(line) - 2));
         new_argument->name[strlen(line) - 2] = '\0';
@@ -213,5 +201,5 @@ void advance_decimal_adress(Command *command, int *decimal_address)
         *decimal_address += command->arguments.amount;
 
     if (command->command_type != DATA)
-        *decimal_address += 1; /* For the line of the actual command */
+        *decimal_address += 1; /* For the line of the next command */
 }
