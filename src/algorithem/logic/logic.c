@@ -80,7 +80,7 @@ Commands destructureFile(FILE *file)
     /* second scan (commands.array): place externs and entries to files and commands unknown binary */
 
     /* line_in_file UPDATE FOR LOGGER */
-    /* 1. Do Not Create the files if there is INVALID command and return */
+    /* 1. Do Not Create the files if there is INVALID command or symbol and return */
 
     /* 2. For each command */
     /* header of base64 will be (amount of command lines, amount of variable lines) */

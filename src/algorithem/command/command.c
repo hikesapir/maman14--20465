@@ -36,6 +36,10 @@ void insertNewCommand(char *line, Commands *commands, int *decimal_address, CMD_
     else
         get_command_arguments(&new_command->arguments, line);
 
+    /* command_type can change due to invalid string */
+    if (new_command->command_type == INVALID)
+        return;
+
     if (!arguments_is_valid(new_command, command_definition))
     {
         new_command->command_type = INVALID;
@@ -111,12 +115,13 @@ void get_command_arguments(Arguments *arguments, char *line)
     char *token = strtok(line, ARGUMENTS_DELIMITER); /* Tokenize the input line */
     Argument *new_argument;
 
+    arguments->amount = 0;
+
     if (token == NULL)
         return;
 
     /* Allocate memory for the arguments array */
     arguments->arr = (Argument **)malloc(sizeof(Argument *));
-    arguments->amount = 0;
 
     /* walk through arguments */
     while (token != NULL)
