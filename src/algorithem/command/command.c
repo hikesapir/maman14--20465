@@ -188,7 +188,6 @@ bool arguments_is_valid(Command *command, CMD_Definition command_definition[])
 
 void advance_decimal_adress(Command *command, int *decimal_address)
 {
-    int i;
     bool both_registers =
         (command->arguments.amount == 2 &&
          command->arguments.arr[0]->type == REGISTER &&

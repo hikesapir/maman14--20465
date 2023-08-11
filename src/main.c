@@ -10,7 +10,6 @@ int main(int argc, char *argv[])
 {
     int i;
     FILE *file;
-    Commands commands;
 
     /* Run the script */
     if (argc == 1)
@@ -26,11 +25,7 @@ int main(int argc, char *argv[])
         {
             /* START OF FILE USAGE */
             file = stripMacros(file, argv[i]);
-            commands = destructureFile(file);
-            /*...*/
-            /*...*/
-            /*...*/
-            /* END OF FILE USAGE */
+            destructureFile(file);
             fclose(file);
         }
     }
