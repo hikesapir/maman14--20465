@@ -32,7 +32,7 @@ Commands destructureFile(FILE *file)
         {"jsr", JSR, 1},
         {"rts", RTS, 0},
         {"stop", STOP, 0},
-        {".string", STRING, -1},
+        {".string", STRING, 1},
         {".data", DATA, -1}};
 
     /* Initialize the symbols and commands structures */

@@ -7,8 +7,8 @@
             "request": "launch",
             "program": "${workspaceFolder}/main.exe",
             "args": [
-                "input\\bad_example",
-                "input\\example"
+                "input\\example",
+                "input\\bad_example"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

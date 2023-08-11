@@ -47,8 +47,10 @@ void insertNewCommand(char *line, Commands *commands, int *decimal_address, CMD_
     if (command_type == STRING)
         get_string_command_arguments(new_command, line);
     else
+    {
         get_command_arguments(&arguments, line);
-    new_command->arguments = arguments;
+        new_command->arguments = arguments;
+    }
 
     if (!arguments_is_valid(new_command, command_definition))
     {
@@ -57,7 +59,7 @@ void insertNewCommand(char *line, Commands *commands, int *decimal_address, CMD_
     }
 
     new_command->decimal_address = *decimal_address;
-    advance_decimal_adress(new_command, decimal_address, command_definition);
+    advance_decimal_adress(new_command, decimal_address);
 }
 
 char *get_command_type(Command_Type *command_type, char *line, CMD_Definition command_definition[])
@@ -160,7 +162,7 @@ bool arguments_is_valid(Command *command, CMD_Definition command_definition[])
     CMD_Definition cmd_definition;
 
     for (i = 0; i < CMD_DEFINITIONS_AMOUNT; i++)
-        if (strcmp(command_definition[i].type, command->command_type) == 0)
+        if (command_definition[i].type == command->command_type)
             cmd_definition = command_definition[i];
 
     if (cmd_definition.args_count != arguments.amount && cmd_definition.args_count != -1)
@@ -198,17 +200,18 @@ bool arguments_is_valid(Command *command, CMD_Definition command_definition[])
 void advance_decimal_adress(Command *command, int *decimal_address)
 {
     int i;
-    Argument *argument;
-    bool both_registers = true;
+    bool both_registers =
+        (command->arguments.amount == 2 &&
+         command->arguments.arr[0]->type == REGISTER &&
+         command->arguments.arr[1]->type == REGISTER);
 
-    /*
-    if (command->arguments.amount !=)
+    if (both_registers)
+        *decimal_address += 1;
+    else if (command->command_type == STRING)
+        *decimal_address += strlen(command->arguments.arr[0]->name);
+    else
+        *decimal_address += command->arguments.amount;
 
-        for (i = 0; i < command->arguments.amount; i++)
-        {
-            argument = command->arguments[i];
-            if(argument->type == REGISTER)
-
-        }
-      */
+    if (command->command_type != DATA)
+        *decimal_address += 1; /* For the line of the actual command */
 }

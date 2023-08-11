@@ -1,5 +1,6 @@
 #ifndef COMMAND_H
 #define COMMAND_H
+#include "../../utils/utils.h"
 
 typedef enum
 {
@@ -106,6 +107,6 @@ void get_string_command_arguments(Command *, char *);
 
 bool arguments_is_valid(Command *, CMD_Definition[]);
 
-void advance_decimal_adress(Command *, int *, CMD_Definition[]);
+void advance_decimal_adress(Command *, int *);
 
 #endif
