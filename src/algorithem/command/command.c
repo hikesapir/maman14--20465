@@ -26,10 +26,17 @@ void insertNewCommand(char *line, Commands *commands, int *decimal_address, CMD_
 
     arguments.amount = 0;
 
+    /* add new command*/
+    commands->amount++;
+    commands->array = (Command **)realloc(commands->array, commands->amount * sizeof(Command *));
+    commands->array[commands->amount - 1] = malloc(sizeof(Command));
+    new_command = commands->array[commands->amount - 1];
+
     /* Trim leading and trailing spaces from 'line' */
     line = trim(line);
 
     line = get_command_type(&command_type, line, command_definition);
+    new_command->command_type = command_type;
 
     if (command_type == INVALID)
         return;
@@ -37,24 +44,20 @@ void insertNewCommand(char *line, Commands *commands, int *decimal_address, CMD_
     /* Trim leading and trailing spaces from 'line' */
     line = trim(line);
 
-    /* add new command*/
-    commands->amount++;
-    commands->array = (Command **)realloc(commands->array, commands->amount * sizeof(Command *));
-    commands->array[commands->amount - 1] = malloc(sizeof(Command));
-    new_command = commands->array[commands->amount - 1];
-
     if (command_type == STRING)
         get_string_command_arguments(new_command, line);
     else
         get_command_arguments(&arguments, line);
-
-    new_command->command_type = command_type;
     new_command->arguments = arguments;
+
+    if (!arguments_is_valid(new_command, command_definition))
+    {
+        new_command->command_type = INVALID;
+        return;
+    }
+
     new_command->decimal_address = *decimal_address;
-
-    /* advance_decimal_adress(new_command, decimal_address); */
-
-    *decimal_address += 1;
+    advance_decimal_adress(new_command, decimal_address, command_definition);
 }
 
 char *get_command_type(Command_Type *command_type, char *line, CMD_Definition command_definition[])
@@ -148,4 +151,64 @@ void get_command_arguments(Arguments *arguments, char *line)
 
         token = strtok(NULL, ARGUMENTS_DELIMITER); /* Move to the next token */
     }
+}
+
+bool arguments_is_valid(Command *command, CMD_Definition command_definition[])
+{
+    int i;
+    Arguments arguments = command->arguments;
+    CMD_Definition cmd_definition;
+
+    for (i = 0; i < CMD_DEFINITIONS_AMOUNT; i++)
+        if (strcmp(command_definition[i].type, command->command_type) == 0)
+            cmd_definition = command_definition[i];
+
+    if (cmd_definition.args_count != arguments.amount && cmd_definition.args_count != -1)
+    {
+        logError("Unexpected amount of arguments for command %s (expected:%d recieved:%d)", cmd_definition.name, cmd_definition.args_count, arguments.amount);
+        return false;
+    }
+
+    switch (cmd_definition.type)
+    {
+    case CMP:    /* TWO ARGUMENT ALL TYPES */
+    case PRN:    /* ONE ARGUMENT ALL TYPES */
+    case STRING: /* ARGUMENTS IS STATIC */
+    case DATA:   /* ARGUMENTS IS STATIC */
+    case RTS:    /* NO ARGUMENTS */
+    case STOP:   /* NO ARGUMENTS */
+        return true;
+    case LEA: /* TWO ARGUMENT FIRST - ALL BUT STATIC, SECOND IS VARIABLE */
+        if (arguments.arr[1]->type != VARIABLE)
+        {
+            logError("Unexpected type of second argument for command lea");
+            return false;
+        }
+    default: /* FIRST ARGUMENT ALL BUT STATIC */
+        if (arguments.arr[0]->type == STATIC)
+        {
+            logError("Unexpected type of first argument for command %s", cmd_definition.name);
+            return false;
+        }
+        else
+            return true;
+    }
+}
+
+void advance_decimal_adress(Command *command, int *decimal_address, CMD_Definition command_definition[])
+{
+    int i;
+    Argument *argument;
+    bool both_registers = true;
+
+    /*
+    if (command->arguments.amount !=)
+
+        for (i = 0; i < command->arguments.amount; i++)
+        {
+            argument = command->arguments[i];
+            if(argument->type == REGISTER)
+
+        }
+      */
 }

@@ -114,5 +114,8 @@ void get_command_arguments(Arguments *, char *);
  */
 void get_string_command_arguments(Command *, char *);
 
-void print_arguments(Arguments);
+bool arguments_is_valid(Command *, CMD_Definition[]);
+
+void advance_decimal_adress(Command *, int *, CMD_Definition[]);
+
 #endif
