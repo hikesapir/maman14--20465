@@ -122,10 +122,13 @@ char *get_command_type(Command_Type *, char *, CMD_Definition[]);
  */
 void get_string_command_arguments(Command *, char *);
 
-/**
- * Parse the command arguments from the input line.
+/*
+ * Parses and extracts the arguments for a command.
  *
- * This function populates the Arguments structure for a non-STRING command.
+ * This function tokenizes the input line to separate individual arguments
+ * based on the specified delimiter and stores them in the Arguments structure.
+ * For each argument, it determines its type (REGISTER, STATIC, or VARIABLE)
+ * and allocates memory to store the argument name.
  *
  * @param arguments Pointer to store the parsed arguments.
  * @param line The input line containing the arguments.

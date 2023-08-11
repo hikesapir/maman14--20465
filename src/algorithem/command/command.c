@@ -116,6 +116,7 @@ void get_command_arguments(Arguments *arguments, char *line)
 
     /* Allocate memory for the arguments array */
     arguments->arr = (Argument **)malloc(sizeof(Argument *));
+    arguments->amount = 0;
 
     /* walk through arguments */
     while (token != NULL)
