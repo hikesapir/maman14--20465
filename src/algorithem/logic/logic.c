@@ -10,10 +10,10 @@
 
 Commands destructureFile(FILE *file)
 {
-    char line[LINE_LENGTH], *colon_ptr; /* Buffer to store each line of the input file */
-    int decimal_address = 100;          /* Starting address for commands */
-    Symbols symbols;                    /* Structure to store different symbols found in the file */
-    Commands commands;                  /* Structure to store the parsed commands from the file */
+    char line[LINE_LENGTH], *colon_ptr;          /* Buffer to store each line of the input file */
+    int decimal_address = 100, line_in_file = 1; /* Starting address for commands */
+    Symbols symbols;                             /* Structure to store different symbols found in the file */
+    Commands commands;                           /* Structure to store the parsed commands from the file */
 
     CMD_Definition command_definition[] = {
         {"mov", MOV, 2},
@@ -70,6 +70,8 @@ Commands destructureFile(FILE *file)
         /* If the line contains an instruction or a command */
         else
             insertNewCommand(line, &commands, &decimal_address, command_definition);
+
+        line_in_file += 1;
     }
 
     /* Reset the file pointer to the beginning of the file */
@@ -77,16 +79,16 @@ Commands destructureFile(FILE *file)
 
     /* second scan (commands.array): place externs and entries to files and commands unknown binary */
 
-    /* Do Not Create the files if there is errors */
+    /* line_in_file UPDATE FOR LOGGER */
+    /* 1. Do Not Create the files if there is INVALID command and return */
 
-    /* For each command */
-    /* if there is an unknown variable we will change the command type to INVALID */
-    /* write command as binary */
+    /* 2. For each command */
+    /* header of base64 will be (amount of command lines, amount of variable lines) */
+    /* write command from binary to base64 file */
+    /* write to externs usage file */
+    /* write the entries to the entries file */
 
-    /* 2 files () */
-
-    /* write as base 64 from binary */
-    /* Header will bae (amount of command lines, amount of variable lines) */
+    /* 3. Free all objects */
 
     return commands;
 }
