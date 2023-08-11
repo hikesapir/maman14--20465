@@ -59,21 +59,11 @@ typedef struct commands
     int amount;
 } Commands;
 
-typedef enum
-{
-    ALL = 1,
-    ALL_BUT_STATIC = 2,
-    VAR = 3,
-    STAT = 4
-} Argument_Type_Group;
-
 typedef struct cmd_definition
 {
     char *name;
     Command_Type type;
     int args_count;
-    Argument_Type_Group Destination_Operand_Types;
-    Argument_Type_Group Source_Operand_Types;
 } CMD_Definition;
 
 /**

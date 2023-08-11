@@ -16,24 +16,24 @@ Commands destructureFile(FILE *file)
     Commands commands;                  /* Structure to store the parsed commands from the file */
 
     CMD_Definition command_definition[] = {
-        {"mov", MOV, 2, ALL_BUT_STATIC, ALL},
-        {"cmp", CMP, 2, ALL, ALL},
-        {"add", ADD, 2, ALL_BUT_STATIC, ALL},
-        {"sub", SUB, 2, ALL_BUT_STATIC, ALL},
-        {"not", NOT, 1, ALL_BUT_STATIC, 0},
-        {"clr", CLR, 1, ALL_BUT_STATIC, 0},
-        {"lea", LEA, 2, ALL_BUT_STATIC, VAR},
-        {"inc", INC, 1, ALL_BUT_STATIC, 0},
-        {"dec", DEC, 1, ALL_BUT_STATIC, 0},
-        {"jmp", JMP, 1, ALL_BUT_STATIC, 0},
-        {"bne", BNE, 1, ALL_BUT_STATIC, 0},
-        {"red", RED, 1, ALL_BUT_STATIC, 0},
-        {"prn", PRN, 1, ALL, 0},
-        {"jsr", JSR, 1, ALL_BUT_STATIC, 0},
-        {"rts", RTS, 0, 0, 0},
-        {"stop", STOP, 0, 0, 0},
-        {".string", STRING, -1, STAT, STAT},
-        {".data", DATA, -1, STAT, STAT}};
+        {"mov", MOV, 2},
+        {"cmp", CMP, 2},
+        {"add", ADD, 2},
+        {"sub", SUB, 2},
+        {"not", NOT, 1},
+        {"clr", CLR, 1},
+        {"lea", LEA, 2},
+        {"inc", INC, 1},
+        {"dec", DEC, 1},
+        {"jmp", JMP, 1},
+        {"bne", BNE, 1},
+        {"red", RED, 1},
+        {"prn", PRN, 1},
+        {"jsr", JSR, 1},
+        {"rts", RTS, 0},
+        {"stop", STOP, 0},
+        {".string", STRING, -1},
+        {".data", DATA, -1}};
 
     /* Initialize the symbols and commands structures */
     symbols.array = (Symbol **)malloc(sizeof(Symbol *));
