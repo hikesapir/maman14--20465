@@ -50,6 +50,7 @@ void insertNewCommand(char *line, Commands *commands, int *decimal_address, CMD_
     new_command->decimal_address = *decimal_address;
     advance_decimal_adress(new_command, decimal_address);
 
+    /* Set the binary representation for the command */
     set_command_binary(new_command);
 }
 

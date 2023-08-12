@@ -89,21 +89,25 @@ typedef struct cmd_definition
 } CMD_Definition;
 
 /**
- * Insert a new command into the Commands structure based on the given line and address.
+ * @brief Inserts a new command into the commands structure.
  *
- * This function processes the given line to extract and parse the command information.
- * It then adds the parsed command to the Commands structure with the provided address.
+ * This function takes a line representing a new command, along with various other parameters, and inserts
+ * the command into the commands structure. It identifies the command type, trims the line, processes
+ * arguments, validates them, updates the decimal address, and sets the command's binary representation.
  *
- * @param line The line containing the command information to be parsed and added.
- * @param commands The Commands structure to which the new command will be added.
- * @param decimal_address The decimal address associated with the command.
- * @param command_definition An array of CMD_Definition representing command definitions.
- * @param line_in_file The line number in the input file where the command is located.
+ * @param line The line containing the new command.
+ * @param commands A pointer to the commands structure.
+ * @param decimal_address A pointer to the decimal address value.
+ * @param command_definition An array of CMD_Definition structs defining command details.
+ * @param line_in_file The line number in the input file.
  */
 void insertNewCommand(char *, Commands *, int *, CMD_Definition[], int);
 
 /**
- * Determine the command type based on the input line.
+ * @brief Determine the command type based on the input line.
+ *
+ * This function identifies the command type based on the command name in the input line.
+ * It searches for a match in the command_definition array and updates the command_type accordingly.
  *
  * @param command_type Pointer to store the detected command type.
  * @param line The input line to analyze.
@@ -115,7 +119,7 @@ void insertNewCommand(char *, Commands *, int *, CMD_Definition[], int);
 char *get_command_type(Command_Type *, char *, CMD_Definition[], int);
 
 /**
- * Parse the string command arguments from the input line.
+ * @brief Parse the string command arguments from the input line.
  *
  * This function populates the Arguments structure for a STRING command.
  *
@@ -125,12 +129,11 @@ char *get_command_type(Command_Type *, char *, CMD_Definition[], int);
  */
 void get_string_command_arguments(Command *, char *, int);
 
-/*
- * Parses and extracts the arguments for a command.
+/**
+ * @brief Parse and extract the arguments for a command.
  *
  * This function tokenizes the input line to separate individual arguments
- * based on the specified delimiter and stores them in the Arguments structure.
- * For each argument, it determines its type (REGISTER, STATIC, or VARIABLE)
+ * and stores them in the Arguments structure. It determines the argument type
  * and allocates memory to store the argument name.
  *
  * @param arguments Pointer to store the parsed arguments.
@@ -139,43 +142,58 @@ void get_string_command_arguments(Command *, char *, int);
 void get_command_arguments(Arguments *, char *);
 
 /**
- * Check if the arguments for a given command are valid.
+ * @brief Check if command arguments are valid.
  *
- * @param command Pointer to the command to check.
+ * This function checks if the given command's arguments are valid according to
+ * the specified command definitions. It ensures the correct number of arguments
+ * and their types match the expected format.
+ *
+ * @param command Pointer to the command structure.
  * @param command_definition An array of CMD_Definition representing command definitions.
  * @param line_in_file The line number in the input file where the command is located.
- * @return True if the arguments are valid, false otherwise.
+ * @return True if the arguments are valid, otherwise false.
  */
 bool arguments_is_valid(Command *, CMD_Definition[], int);
 
 /**
- * Advance the decimal address based on the size of a command and its arguments.
+ * @brief Advance the decimal address based on the command's arguments.
  *
- * @param command Pointer to the command to advance the address for.
- * @param decimal_address Pointer to the current decimal address, which will be updated.
+ * This function updates the decimal address based on the number and types of
+ * arguments in the given command. It considers both registers and non-register
+ * arguments to determine the appropriate address advancement.
+ *
+ * @param command Pointer to the command structure.
+ * @param decimal_address A pointer to the decimal address value.
  */
 void advance_decimal_adress(Command *, int *);
 
 /**
- * Check for the presence of invalid commands in the Commands structure.
+ * @brief Check if any command in the structure is invalid.
  *
- * @param commands The Commands structure to check.
- * @return True if invalid commands exist, false otherwise.
+ * This function checks if any command within the Commands structure is marked as invalid.
+ *
+ * @param commands The Commands structure containing the commands.
+ * @return True if any command is invalid, otherwise false.
  */
 bool has_invalid_command(Commands);
 
 /**
- * Frees the memory associated with a Commands object.
+ * @brief Free memory allocated for commands and their arguments.
  *
- * This function takes a pointer to a Commands object and releases all dynamically allocated memory
- * associated with it. It iterates through each Command structure and its associated Arguments,
- * freeing their memory in the proper order. Finally, it releases the memory used for the array of
- * Command pointers and the Commands object itself.
+ * This function frees the memory allocated for the Commands structure,
+ * including individual Command structures and their arguments.
  *
- * @param commands A pointer to the Commands object to be freed.
+ * @param commands A pointer to the Commands structure.
  */
 void free_commands(Commands *);
 
+/**
+ * @brief Set the binary representation for a command.
+ *
+ * This function sets the binary representation for the given command based on its type and arguments.
+ *
+ * @param command Pointer to the command structure.
+ */
 void set_command_binary(Command *);
 
 #endif

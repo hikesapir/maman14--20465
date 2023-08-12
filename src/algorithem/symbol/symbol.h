@@ -25,84 +25,76 @@ typedef struct symbols
 } Symbols;
 
 /**
- * Inserts a new symbol into the Symbols structure based on the given line and type.
+ * @brief Add a new symbol to the symbols structure.
  *
- * This function extracts the symbol name from the provided line and inserts it into
- * the Symbols structure with the given symbol type. It first trims leading and trailing
- * spaces from the line and then processes the line to extract the symbol name before
- * adding it to the Symbols structure.
+ * This function adds a new symbol to the symbols structure after performing validity checks.
+ * It allocates memory for the new symbol's name and properties, then adds it to the structure.
  *
- * @param line The line containing the symbol declaration (e.g., ".extern symbol_name").
- * @param symbols A pointer to the Symbols structure to which the new symbol will be added.
- * @param symbol_length The length of the symbol type declaration (e.g., strlen(".extern\0")).
- * @param type The type of the new symbol to be added.
- * @param line_in_file The line number in the source file where the symbol is declared.
+ * @param symbols A pointer to the Symbols structure.
+ * @param name The name of the new symbol.
+ * @param type The type of the new symbol.
+ * @param decimal_address The decimal address associated with the symbol.
+ * @param line_in_file The line number in the input file where the symbol is located.
  */
 void insertNewSymbol(char *, Symbols *, size_t, SYMBOL_TYPE, int);
 
 /**
- * Inserts a new label symbol into the Symbols structure with the given address.
+ * @brief Insert a new label into the symbols structure.
  *
- * This function extracts the label name from the provided line and inserts it into
- * the Symbols structure with the LABEL type and the given decimal address. It trims
- * leading and trailing spaces from the line and processes it to extract the label name.
+ * This function extracts a new label from the input line and inserts it into the symbols structure.
  *
- * @param line The line containing the label declaration (e.g., "label_name:").
- * @param symbols A pointer to the Symbols structure to which the new label symbol will be added.
+ * @param line The input line containing the new label.
+ * @param symbols A pointer to the Symbols structure.
  * @param decimal_address The decimal address associated with the label.
- * @param line_in_file The line number in the source file where the symbol is declared.
+ * @param line_in_file The line number in the input file where the label is located.
  */
 void insertNewLabel(char *, Symbols *, int, int);
 
 /**
- * Adds a new symbol to the Symbols structure if it is valid.
+ * @brief Add a new symbol to the symbols structure.
  *
- * This function attempts to add a new symbol to the Symbols structure. Before adding,
- * it checks if the symbol is valid by calling the `newSymbolIsValid` function to ensure
- * that the symbol doesn't violate any rules, such as having a duplicate name or containing spaces.
- * If the symbol is valid, it is added to the Symbols structure.
+ * This function adds a new symbol to the symbols structure after performing validity checks.
+ * It allocates memory for the new symbol's name and properties, then adds it to the structure.
  *
- * @param symbols A pointer to the Symbols structure to which the new symbol will be added.
- * @param name The name of the new symbol to be added.
- * @param type The type of the new symbol to be added.
- * @param decimal_address The decimal address associated with the new symbol.
- * @param line_in_file The line number in the source file where the symbol is declared.
+ * @param symbols A pointer to the Symbols structure.
+ * @param name The name of the new symbol.
+ * @param type The type of the new symbol.
+ * @param decimal_address The decimal address associated with the symbol.
+ * @param line_in_file The line number in the input file where the symbol is located.
  */
 void addNewSymbol(Symbols *, char *, SYMBOL_TYPE, int, int);
 
 /**
- * Checks if a new symbol is valid and can be added to the Symbols structure.
+ * @brief Check if a new symbol is valid before adding.
  *
- * This function checks if the provided symbol name is valid for insertion into the Symbols
- * structure. It verifies that the symbol name doesn't already exist in the structure with
- * the same type (except for LABEL type, which allows duplicates). It also ensures that the
- * symbol name doesn't contain spaces.
+ * This function checks whether a new symbol is valid for addition to the symbols structure.
+ * It ensures that the symbol's name is not a duplicate and that it adheres to naming conventions.
  *
- * @param symbols A pointer to the Symbols structure containing existing symbols.
- * @param name The name of the new symbol to be checked for validity.
- * @param type The type of the new symbol to be checked for validity.
- * @param line_in_file The line number in the source file where the symbol is declared.
- * @return Returns true if the new symbol is valid, false otherwise.
+ * @param symbols A pointer to the Symbols structure.
+ * @param name The name of the new symbol.
+ * @param type The type of the new symbol.
+ * @param line_in_file The line number in the input file where the symbol is located.
+ * @return True if the new symbol is valid, otherwise false.
  */
 bool newSymbolIsValid(Symbols *, char *, SYMBOL_TYPE, int);
 
 /**
- * Check for the presence of invalid symbols in the Symbols structure.
+ * @brief Check if any symbol in the structure is invalid.
  *
- * @param symbols The Symbols structure to check.
- * @return True if invalid symbols exist, false otherwise.
+ * This function checks if any symbol within the Symbols structure is marked as invalid.
+ *
+ * @param symbols The Symbols structure containing the symbols.
+ * @return True if any symbol is invalid, otherwise false.
  */
 bool has_invalid_symbol(Symbols);
 
 /**
- * Frees the memory associated with a Symbols object.
+ * @brief Free memory allocated for symbols and their properties.
  *
- * This function takes a pointer to a Symbols object and releases all dynamically allocated memory
- * associated with it. It iterates through each Symbol structure, freeing the memory for the symbol names,
- * and then frees the memory for each individual Symbol structure. Finally, it releases the memory used for
- * the array of Symbol pointers and the Symbols object itself.
+ * This function frees the memory allocated for the Symbols structure,
+ * including individual Symbol structures and their names.
  *
- * @param symbols A pointer to the Symbols object to be freed.
+ * @param symbols A pointer to the Symbols structure.
  */
 void free_symbols(Symbols *);
 

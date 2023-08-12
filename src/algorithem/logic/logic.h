@@ -6,15 +6,15 @@
 #include "../symbol/symbol.h"
 
 /**
- * Destructures the provided file, extracting symbols and commands from it.
+ * @brief Destructures a given file into symbols and commands.
  *
- * This function reads the input file line by line and extracts relevant information such as
- * externs, entries, labels, and commands. It then creates an array of Commands containing the
- * parsed command information. The symbols found during the process are stored in the Symbols
- * structure, which keeps track of different symbol types.
+ * This function takes a file pointer, symbols, and commands structures as input, and populates them with
+ * the relevant information from the provided file. It reads the file line by line, identifying externs,
+ * entries, labels, and commands, and associates appropriate data with them.
  *
- * @param file The FILE pointer to the input file that needs to be destructured.
- * @return A Commands structure containing the array of parsed commands and their amount.
+ * @param file A pointer to the input file.
+ * @param symbols A pointer to the symbols structure.
+ * @param commands A pointer to the commands structure.
  */
 void destructureFile(FILE *, Symbols *, Commands *);
 
