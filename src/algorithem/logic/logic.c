@@ -13,7 +13,7 @@ void destructureFile(FILE *file, Symbols *symbols, Commands *commands)
     char line[LINE_LENGTH], *colon_ptr;          /* Buffer to store each line of the input file */
     int decimal_address = 100, line_in_file = 1; /* Starting address for commands */
 
-    // Definitions for various commands
+    /* Definitions for various commands */
     CMD_Definition command_definition[] = {
         {"mov", MOV, 2},
         {"cmp", CMP, 2},

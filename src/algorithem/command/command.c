@@ -18,6 +18,10 @@ void insertNewCommand(char *line, Commands *commands, int *decimal_address, CMD_
     commands->array[commands->amount - 1] = malloc(sizeof(Command));
     new_command = commands->array[commands->amount - 1];
 
+    /* Allocate memory for the arguments array */
+    new_command->arguments.arr = (Argument **)malloc(sizeof(Argument *));
+    new_command->arguments.amount = 0;
+
     /* Trim leading and trailing spaces from 'line' */
     line = trim(line);
 
@@ -90,21 +94,14 @@ void get_string_command_arguments(Command *command, char *line, int line_in_file
 {
     int i;
     Argument *new_argument;
-    Arguments *arguments;
+    Arguments *arguments = &command->arguments;
     char argument;
-
-    arguments = &command->arguments;
 
     if (*line == '\0')
         return;
 
     /* If the input match the expected format */
     if (*line == '"' && *(line + strlen(line) - 1) == '"')
-    {
-        /* Allocate memory for the arguments array */
-        arguments->arr = (Argument **)malloc(sizeof(Argument *));
-        arguments->amount = 0;
-
         for (i = 1; i < strlen(line) - 1; i++)
         {
             argument = line[i];
@@ -122,7 +119,6 @@ void get_string_command_arguments(Command *command, char *line, int line_in_file
             new_argument->type = STATIC;
             new_argument->decimal_address = 0;
         }
-    }
     else
     {
         logError("line %d: .string content is not wraped with quotes (\"...\")", line_in_file);
@@ -135,13 +131,8 @@ void get_command_arguments(Arguments *arguments, char *line)
     char *token = strtok(line, ARGUMENTS_DELIMITER); /* Tokenize the input line */
     Argument *new_argument;
 
-    arguments->amount = 0;
-
     if (token == NULL)
         return;
-
-    /* Allocate memory for the arguments array */
-    arguments->arr = (Argument **)malloc(sizeof(Argument *));
 
     /* walk through arguments */
     while (token != NULL)
