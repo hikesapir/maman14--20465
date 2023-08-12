@@ -35,8 +35,9 @@ typedef struct symbols
  * @param symbols A pointer to the Symbols structure to which the new symbol will be added.
  * @param symbol_length The length of the symbol type declaration (e.g., strlen(".extern\0")).
  * @param type The type of the new symbol to be added.
+ * @param line_in_file The line number in the source file where the symbol is declared.
  */
-void insertNewSymbol(char *, Symbols *, size_t, SYMBOL_TYPE);
+void insertNewSymbol(char *, Symbols *, size_t, SYMBOL_TYPE, int);
 
 /**
  * Inserts a new label symbol into the Symbols structure with the given address.
@@ -48,8 +49,9 @@ void insertNewSymbol(char *, Symbols *, size_t, SYMBOL_TYPE);
  * @param line The line containing the label declaration (e.g., "label_name:").
  * @param symbols A pointer to the Symbols structure to which the new label symbol will be added.
  * @param decimal_address The decimal address associated with the label.
+ * @param line_in_file The line number in the source file where the symbol is declared.
  */
-void insertNewLabel(char *, Symbols *, int);
+void insertNewLabel(char *, Symbols *, int, int);
 
 /**
  * Adds a new symbol to the Symbols structure if it is valid.
@@ -62,8 +64,9 @@ void insertNewLabel(char *, Symbols *, int);
  * @param symbols A pointer to the Symbols structure to which the new symbol will be added.
  * @param name The name of the new symbol to be added.
  * @param type The type of the new symbol to be added.
+ * @param line_in_file The line number in the source file where the symbol is declared.
  */
-void addNewSymbol(Symbols *, char *, SYMBOL_TYPE, int);
+void addNewSymbol(Symbols *, char *, SYMBOL_TYPE, int, int);
 
 /**
  * Checks if a new symbol is valid and can be added to the Symbols structure.
@@ -76,8 +79,9 @@ void addNewSymbol(Symbols *, char *, SYMBOL_TYPE, int);
  * @param symbols A pointer to the Symbols structure containing existing symbols.
  * @param name The name of the new symbol to be checked for validity.
  * @param type The type of the new symbol to be checked for validity.
+ * @param line_in_file The line number in the source file where the symbol is declared.
  * @return Returns true if the new symbol is valid, false otherwise.
  */
-bool newSymbolIsValid(Symbols *, char *, SYMBOL_TYPE);
+bool newSymbolIsValid(Symbols *, char *, SYMBOL_TYPE, int);
 
 #endif

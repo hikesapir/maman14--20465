@@ -98,8 +98,9 @@ typedef struct cmd_definition
  * @param commands The Commands structure to which the new command will be added.
  * @param decimal_address The decimal address associated with the command.
  * @param command_definition An array of CMD_Definition representing command definitions.
+ * @param line_in_file The line number in the input file where the command is located.
  */
-void insertNewCommand(char *, Commands *, int *, CMD_Definition[]);
+void insertNewCommand(char *, Commands *, int *, CMD_Definition[], int);
 
 /**
  * Determine the command type based on the input line.
@@ -107,10 +108,11 @@ void insertNewCommand(char *, Commands *, int *, CMD_Definition[]);
  * @param command_type Pointer to store the detected command type.
  * @param line The input line to analyze.
  * @param command_definition An array of CMD_Definition representing command definitions.
+ * @param line_in_file The line number in the input file where the command is located.
  * @return Pointer to the remaining part of the line after the command name,
  *         or NULL if the command is undefined.
  */
-char *get_command_type(Command_Type *, char *, CMD_Definition[]);
+char *get_command_type(Command_Type *, char *, CMD_Definition[], int);
 
 /**
  * Parse the string command arguments from the input line.
@@ -140,9 +142,10 @@ void get_command_arguments(Arguments *, char *);
  *
  * @param command Pointer to the command to check.
  * @param command_definition An array of CMD_Definition representing command definitions.
+ * @param line_in_file The line number in the input file where the command is located.
  * @return True if the arguments are valid, false otherwise.
  */
-bool arguments_is_valid(Command *, CMD_Definition[]);
+bool arguments_is_valid(Command *, CMD_Definition[], int);
 
 /**
  * Advance the decimal address based on the size of a command and its arguments.
