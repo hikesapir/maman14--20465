@@ -8,7 +8,9 @@
             "program": "${workspaceFolder}/main.exe",
             "args": [
                 "input\\example",
-                "input\\bad_example"
+                "input\\bad_example",
+                "input\\test",
+                "input\\bad_test",
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
