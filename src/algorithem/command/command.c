@@ -9,7 +9,7 @@
 
 void insertNewCommand(char *line, Commands *commands, int *decimal_address, CMD_Definition command_definition[], int line_in_file)
 {
-    Command_Type command_type = INVALID;
+    Command_Type command_type = INVALID_COMMAND;
     Command *new_command;
 
     /* add new command */
@@ -25,7 +25,7 @@ void insertNewCommand(char *line, Commands *commands, int *decimal_address, CMD_
     line = get_command_type(&command_type, line, command_definition, line_in_file);
     new_command->command_type = command_type;
 
-    if (command_type == INVALID)
+    if (command_type == INVALID_COMMAND)
         return;
 
     /* Trim leading and trailing spaces from 'line' */
@@ -37,12 +37,12 @@ void insertNewCommand(char *line, Commands *commands, int *decimal_address, CMD_
         get_command_arguments(&new_command->arguments, line);
 
     /* command_type can change due to invalid string */
-    if (new_command->command_type == INVALID)
+    if (new_command->command_type == INVALID_COMMAND)
         return;
 
     if (!arguments_is_valid(new_command, command_definition, line_in_file))
     {
-        new_command->command_type = INVALID;
+        new_command->command_type = INVALID_COMMAND;
         return;
     }
 
@@ -77,7 +77,7 @@ char *get_command_type(Command_Type *command_type, char *line, CMD_Definition co
     /* Log an error if the command is not found in the definitions */
     logError("line %d: Undefined Command: %s", line_in_file, command_name);
 
-    *command_type = INVALID;
+    *command_type = INVALID_COMMAND;
     free(command_name); /* Free allocated memory */
     return NULL;
 }
@@ -107,7 +107,7 @@ void get_string_command_arguments(Command *command, char *line)
         new_argument->name[strlen(line) - 2] = '\0';
     }
     else
-        command->command_type = INVALID;
+        command->command_type = INVALID_COMMAND;
 }
 
 void get_command_arguments(Arguments *arguments, char *line)
@@ -207,4 +207,13 @@ void advance_decimal_adress(Command *command, int *decimal_address)
 
     if (command->command_type != DATA)
         *decimal_address += 1; /* For the line of the next command */
+}
+
+bool has_invalid_command(Commands commands)
+{
+    int i;
+    for (i = 0; i < commands.amount; i++)
+        if (commands.array[i]->command_type == INVALID_COMMAND)
+            return true;
+    return false;
 }

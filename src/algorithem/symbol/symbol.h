@@ -7,7 +7,8 @@ typedef enum
 {
     EXTERN,
     ENTRY,
-    LABEL
+    LABEL,
+    INVALID_SYMBOL
 } SYMBOL_TYPE;
 
 typedef struct symbol
@@ -57,13 +58,14 @@ void insertNewLabel(char *, Symbols *, int, int);
  * Adds a new symbol to the Symbols structure if it is valid.
  *
  * This function attempts to add a new symbol to the Symbols structure. Before adding,
- * it calls the newSymbolIsValid() function to check if the symbol is valid and doesn't
- * violate any rules (e.g., duplicate name, spaces in the name). If the symbol is valid,
- * it is added to the structure.
+ * it checks if the symbol is valid by calling the `newSymbolIsValid` function to ensure
+ * that the symbol doesn't violate any rules, such as having a duplicate name or containing spaces.
+ * If the symbol is valid, it is added to the Symbols structure.
  *
  * @param symbols A pointer to the Symbols structure to which the new symbol will be added.
  * @param name The name of the new symbol to be added.
  * @param type The type of the new symbol to be added.
+ * @param decimal_address The decimal address associated with the new symbol.
  * @param line_in_file The line number in the source file where the symbol is declared.
  */
 void addNewSymbol(Symbols *, char *, SYMBOL_TYPE, int, int);
@@ -83,5 +85,13 @@ void addNewSymbol(Symbols *, char *, SYMBOL_TYPE, int, int);
  * @return Returns true if the new symbol is valid, false otherwise.
  */
 bool newSymbolIsValid(Symbols *, char *, SYMBOL_TYPE, int);
+
+/**
+ * Check for the presence of invalid symbols in the Symbols structure.
+ *
+ * @param symbols The Symbols structure to check.
+ * @return True if invalid symbols exist, false otherwise.
+ */
+bool has_invalid_symbol(Symbols);
 
 #endif
