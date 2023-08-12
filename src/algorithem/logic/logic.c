@@ -48,26 +48,26 @@ void destructureFile(FILE *file, Symbols *symbols, Commands *commands)
     {
         /* If the line contains ".extern" */
         if (strstr(line, ".extern") != NULL)
-            insertNewSymbol(line, &symbols, strlen(".extern\0"), EXTERN, line_in_file);
+            insertNewSymbol(line, symbols, strlen(".extern\0"), EXTERN, line_in_file);
 
         /* If the line contains ".entry" */
         else if (strstr(line, ".entry") != NULL)
-            insertNewSymbol(line, &symbols, strlen(".entry\0"), ENTRY, line_in_file);
+            insertNewSymbol(line, symbols, strlen(".entry\0"), ENTRY, line_in_file);
 
         /* If the line contains a label (indicated by a colon) */
         else if (strstr(line, ":") != NULL)
         {
             /* Insert the new label symbol and the associated command */
-            insertNewLabel(line, &symbols, decimal_address, line_in_file);
+            insertNewLabel(line, symbols, decimal_address, line_in_file);
 
             colon_ptr = strstr(line, ":");
 
-            insertNewCommand(colon_ptr + 1, &commands, &decimal_address, command_definition, line_in_file);
+            insertNewCommand(colon_ptr + 1, commands, &decimal_address, command_definition, line_in_file);
         }
 
         /* If the line contains an instruction or a command */
         else
-            insertNewCommand(line, &commands, &decimal_address, command_definition, line_in_file);
+            insertNewCommand(line, commands, &decimal_address, command_definition, line_in_file);
 
         line_in_file += 1;
     }

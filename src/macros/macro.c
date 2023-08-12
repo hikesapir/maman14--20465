@@ -199,15 +199,15 @@ char *getMacroName(char *source)
 void freeMacros(Macros macros)
 {
     /* init macro index and content index */
-    int Mi, Ci;
+    int macro_index, content_index;
 
-    for (Mi = 0; Mi < macros.amountOfMacros; Mi++)
+    for (macro_index = 0; macro_index < macros.amountOfMacros; macro_index++)
     {
-        free(macros.array[Mi]->name);
-        for (Ci = 0; Ci < macros.array[Mi]->amountOfLines; Ci++)
-            free(macros.array[Mi]->content[Ci]);
-        free(macros.array[Mi]->content);
-        free(macros.array[Mi]);
+        free(macros.array[macro_index]->name);
+        for (content_index = 0; content_index < macros.array[macro_index]->amountOfLines; content_index++)
+            free(macros.array[macro_index]->content[content_index]);
+        free(macros.array[macro_index]->content);
+        free(macros.array[macro_index]);
     }
     free(macros.array);
 }

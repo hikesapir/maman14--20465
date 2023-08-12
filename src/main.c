@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 
             /* 1. Do Not Create the files if there is INVALID command or symbol and return */
             if (has_invalid_command(commands) || has_invalid_symbol(symbols))
-                return;
+                continue;
 
             /* 2. For each command */
             /* header of base64 will be (amount of command lines, amount of variable lines) */
@@ -52,5 +52,5 @@ int main(int argc, char *argv[])
         }
     }
 
-    return 1;
+    return 0;
 }

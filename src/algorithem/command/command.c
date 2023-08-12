@@ -31,6 +31,7 @@ void insertNewCommand(char *line, Commands *commands, int *decimal_address, CMD_
     /* Trim leading and trailing spaces from 'line' */
     line = trim(line);
 
+    new_command->arguments.arr = NULL;
     if (command_type == STRING)
         get_string_command_arguments(new_command, line);
     else
@@ -235,14 +236,12 @@ void free_commands(Commands *commands)
             free(argument->name);
             free(argument);
         }
-        free(command->arguments.arr);
+        if (command->arguments.arr != NULL)
+            free(command->arguments.arr);
 
         /* Free the memory for the Command structure itself */
         free(command);
     }
     /* Free memory for the array of Command pointers */
     free(commands->array);
-
-    /* Free memory for the Commands object itself */
-    free(commands);
 }

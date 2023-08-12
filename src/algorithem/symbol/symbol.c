@@ -131,7 +131,4 @@ void free_symbols(Symbols *symbols)
 
     /* Free memory for the array of Symbol pointers */
     free(symbols->array);
-
-    /* Free memory for the Symbols object itself */
-    free(symbols);
 }
