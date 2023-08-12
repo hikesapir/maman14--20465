@@ -17,25 +17,25 @@ typedef enum
  */
 typedef enum
 {
-    MOV,    /* Move data between operands. */
-    CMP,    /* Compare two operands. */
-    ADD,    /* Add operands. */
-    SUB,    /* Subtract operands. */
-    NOT,    /* Perform bitwise NOT operation on an operand. */
-    CLR,    /* Clear (zero out) an operand. */
-    LEA,    /* Load effective address. */
-    INC,    /* Increment operand value. */
-    DEC,    /* Decrement operand value. */
-    JMP,    /* Unconditional jump. */
-    BNE,    /* Branch if not equal. */
-    RED,    /* Read input to operand. */
-    PRN,    /* Print operand value. */
-    JSR,    /* Jump to subroutine. */
-    RTS,    /* Return from subroutine. */
-    STOP,   /* Halt program execution. */
-    STRING, /* Define a string in memory. */
-    DATA,   /* Define data in memory. */
-    INVALID /* Invalid or undefined command. */
+    MOV,            /* Move data between operands. */
+    CMP,            /* Compare two operands. */
+    ADD,            /* Add operands. */
+    SUB,            /* Subtract operands. */
+    NOT,            /* Perform bitwise NOT operation on an operand. */
+    CLR,            /* Clear (zero out) an operand. */
+    LEA,            /* Load effective address. */
+    INC,            /* Increment operand value. */
+    DEC,            /* Decrement operand value. */
+    JMP,            /* Unconditional jump. */
+    BNE,            /* Branch if not equal. */
+    RED,            /* Read input to operand. */
+    PRN,            /* Print operand value. */
+    JSR,            /* Jump to subroutine. */
+    RTS,            /* Return from subroutine. */
+    STOP,           /* Halt program execution. */
+    STRING,         /* Define a string in memory. */
+    DATA,           /* Define data in memory. */
+    INVALID_COMMAND /* Invalid or undefined command. */
 } Command_Type;
 
 /**
