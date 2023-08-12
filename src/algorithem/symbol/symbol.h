@@ -94,4 +94,16 @@ bool newSymbolIsValid(Symbols *, char *, SYMBOL_TYPE, int);
  */
 bool has_invalid_symbol(Symbols);
 
+/**
+ * Frees the memory associated with a Symbols object.
+ *
+ * This function takes a pointer to a Symbols object and releases all dynamically allocated memory
+ * associated with it. It iterates through each Symbol structure, freeing the memory for the symbol names,
+ * and then frees the memory for each individual Symbol structure. Finally, it releases the memory used for
+ * the array of Symbol pointers and the Symbols object itself.
+ *
+ * @param symbols A pointer to the Symbols object to be freed.
+ */
+void free_symbols(Symbols *);
+
 #endif

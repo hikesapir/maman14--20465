@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include "../command/command.h"
+#include "../symbol/symbol.h"
 
 /**
  * Destructures the provided file, extracting symbols and commands from it.
@@ -15,6 +16,6 @@
  * @param file The FILE pointer to the input file that needs to be destructured.
  * @return A Commands structure containing the array of parsed commands and their amount.
  */
-Commands destructureFile(FILE *);
+void destructureFile(FILE *, Symbols *, Commands *);
 
 #endif

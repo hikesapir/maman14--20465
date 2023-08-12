@@ -63,10 +63,10 @@ typedef struct arguments
  */
 typedef struct command
 {
-    Command_Type command_type; /* Type of the command. */
-    int decimal_address;       /* Decimal address of the command. */
-    int binary_representation; /* Binary representation of the command. */
-    Arguments arguments;       /* List of arguments for the command. */
+    Command_Type command_type;     /* Type of the command. */
+    int decimal_address;           /* Decimal address of the command. */
+    int binary_representation[12]; /* Binary representation of the command. */
+    Arguments arguments;           /* List of arguments for the command. */
 } Command;
 
 /**
@@ -162,5 +162,17 @@ void advance_decimal_adress(Command *, int *);
  * @return True if invalid commands exist, false otherwise.
  */
 bool has_invalid_command(Commands);
+
+/**
+ * Frees the memory associated with a Commands object.
+ *
+ * This function takes a pointer to a Commands object and releases all dynamically allocated memory
+ * associated with it. It iterates through each Command structure and its associated Arguments,
+ * freeing their memory in the proper order. Finally, it releases the memory used for the array of
+ * Command pointers and the Commands object itself.
+ *
+ * @param commands A pointer to the Commands object to be freed.
+ */
+void free_commands(Commands *);
 
 #endif

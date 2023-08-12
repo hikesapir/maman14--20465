@@ -217,3 +217,32 @@ bool has_invalid_command(Commands commands)
             return true;
     return false;
 }
+
+void free_commands(Commands *commands)
+{
+    int i, j;
+    Command *command;
+    Argument *argument;
+    /* Free memory for each individual Command structure */
+    for (i = 0; i < commands->amount; i++)
+    {
+        command = commands->array[i];
+
+        /* Free the memory for each argument inside the Command */
+        for (j = 0; j < command->arguments.amount; j++)
+        {
+            argument = command->arguments.arr[j];
+            free(argument->name);
+            free(argument);
+        }
+        free(command->arguments.arr);
+
+        /* Free the memory for the Command structure itself */
+        free(command);
+    }
+    /* Free memory for the array of Command pointers */
+    free(commands->array);
+
+    /* Free memory for the Commands object itself */
+    free(commands);
+}

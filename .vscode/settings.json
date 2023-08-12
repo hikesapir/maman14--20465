@@ -22,7 +22,8 @@
         "limits": "c",
         "new": "c",
         "ctype.h": "c",
-        "command.h": "c"
+        "command.h": "c",
+        "symbol.h": "c"
     },
     "cmake.configureOnOpen": true,
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",

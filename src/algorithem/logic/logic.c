@@ -8,12 +8,10 @@
 #include "../symbol/symbol.h"
 #include "../command/command.h"
 
-Commands destructureFile(FILE *file)
+void destructureFile(FILE *file, Symbols *symbols, Commands *commands)
 {
     char line[LINE_LENGTH], *colon_ptr;          /* Buffer to store each line of the input file */
     int decimal_address = 100, line_in_file = 1; /* Starting address for commands */
-    Symbols symbols;                             /* Structure to store different symbols found in the file */
-    Commands commands;                           /* Structure to store the parsed commands from the file */
 
     CMD_Definition command_definition[] = {
         {"mov", MOV, 2},
@@ -36,11 +34,11 @@ Commands destructureFile(FILE *file)
         {".data", DATA, -1}};
 
     /* Initialize the symbols and commands structures */
-    symbols.array = (Symbol **)malloc(sizeof(Symbol *));
-    symbols.amount = 0;
+    symbols->array = (Symbol **)malloc(sizeof(Symbol *));
+    symbols->amount = 0;
 
-    commands.array = (Command **)malloc(sizeof(Command *));
-    commands.amount = 0;
+    commands->array = (Command **)malloc(sizeof(Command *));
+    commands->amount = 0;
 
     /* Reset the file pointer to the beginning of the file */
     rewind(file);
@@ -73,21 +71,4 @@ Commands destructureFile(FILE *file)
 
         line_in_file += 1;
     }
-
-    /* Reset the file pointer to the beginning of the file */
-    rewind(file);
-
-    /* 1. Do Not Create the files if there is INVALID command or symbol and return */
-    if (has_invalid_command(commands) || has_invalid_symbol(symbols))
-        return;
-    /* second scan (commands.array): place externs and entries to files and commands unknown binary */
-    /* 2. For each command */
-    /* header of base64 will be (amount of command lines, amount of variable lines) */
-    /* write command from binary to base64 file */
-    /* write to externs usage file */
-    /* write the entries to the entries file */
-
-    /* 3. Free all objects */
-
-    return commands;
 }

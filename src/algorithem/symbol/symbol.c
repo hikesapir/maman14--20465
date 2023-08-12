@@ -111,3 +111,27 @@ bool has_invalid_symbol(Symbols symbols)
             return true;
     return false;
 }
+
+void free_symbols(Symbols *symbols)
+{
+    int i;
+    Symbol *symbol;
+
+    /* Free memory for each individual Symbol structure */
+    for (i = 0; i < symbols->amount; i++)
+    {
+        symbol = symbols->array[i];
+
+        /* Free memory for the symbol name */
+        free(symbol->name);
+
+        /* Free the memory for the Symbol structure itself */
+        free(symbol);
+    }
+
+    /* Free memory for the array of Symbol pointers */
+    free(symbols->array);
+
+    /* Free memory for the Symbols object itself */
+    free(symbols);
+}
