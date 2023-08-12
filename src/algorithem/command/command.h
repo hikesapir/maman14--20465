@@ -43,10 +43,10 @@ typedef enum
  */
 typedef struct argument
 {
-    char *name;                /* Name of the argument. */
-    int decimal_address;       /* Decimal address of the argument. */
-    int binary_representation; /* Binary representation of the argument. */
-    Argument_Type type;        /* Type of the argument. */
+    char *name;                    /* Name of the argument. */
+    int decimal_address;           /* Decimal address of the argument. */
+    int binary_representation[12]; /* Binary representation of the argument. */
+    Argument_Type type;            /* Type of the argument. */
 } Argument;
 
 /**
@@ -121,8 +121,9 @@ char *get_command_type(Command_Type *, char *, CMD_Definition[], int);
  *
  * @param command Pointer to store the parsed arguments.
  * @param line The input line containing the arguments.
+ * @param line_in_file The line number in the input file where the command is located.
  */
-void get_string_command_arguments(Command *, char *);
+void get_string_command_arguments(Command *, char *, int);
 
 /*
  * Parses and extracts the arguments for a command.

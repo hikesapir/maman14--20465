@@ -56,6 +56,9 @@ int int_to_binary(int n)
     int binary = 0;
     int digit, place = 1;
 
+    if (n < 0)
+        n = -n;
+
     while (n > 0)
     {
         digit = n % 2;

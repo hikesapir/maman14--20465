@@ -33,7 +33,7 @@ void insertNewCommand(char *line, Commands *commands, int *decimal_address, CMD_
 
     new_command->arguments.arr = NULL;
     if (command_type == STRING)
-        get_string_command_arguments(new_command, line);
+        get_string_command_arguments(new_command, line, line_in_file);
     else
         get_command_arguments(&new_command->arguments, line);
 
@@ -85,10 +85,12 @@ char *get_command_type(Command_Type *command_type, char *line, CMD_Definition co
     return NULL;
 }
 
-void get_string_command_arguments(Command *command, char *line)
+void get_string_command_arguments(Command *command, char *line, int line_in_file)
 {
+    int i;
     Argument *new_argument;
     Arguments *arguments;
+    char argument;
 
     arguments = &command->arguments;
 
@@ -100,17 +102,31 @@ void get_string_command_arguments(Command *command, char *line)
     {
         /* Allocate memory for the arguments array */
         arguments->arr = (Argument **)malloc(sizeof(Argument *));
-        arguments->amount = 1;
-        arguments->arr[arguments->amount - 1] = malloc(sizeof(Argument));
-        new_argument = arguments->arr[arguments->amount - 1];
+        arguments->amount = 0;
 
-        /* Extract and store the string argument (without quotes) */
-        new_argument->name = malloc((strlen(line) - 1) * sizeof(char));
-        strncpy(new_argument->name, (line + 1), (strlen(line) - 2));
-        new_argument->name[strlen(line) - 2] = '\0';
+        for (i = 1; i < strlen(line) - 1; i++)
+        {
+            argument = line[i];
+
+            arguments->amount += 1;
+            arguments->arr = (Argument **)realloc(arguments->arr, arguments->amount * sizeof(Argument *));
+            arguments->arr[arguments->amount - 1] = malloc(sizeof(Argument));
+            new_argument = arguments->arr[arguments->amount - 1];
+
+            /* Extract and store the string argument (without quotes) */
+
+            new_argument->name = malloc(2 * sizeof(char));
+            new_argument->name[0] = argument;
+            new_argument->name[1] = '\0';
+            new_argument->type = STATIC;
+            new_argument->decimal_address = 0;
+        }
     }
     else
+    {
+        logError("line %d: .string content is not wraped with quotes (\"...\")", line_in_file);
         command->command_type = INVALID_COMMAND;
+    }
 }
 
 void get_command_arguments(Arguments *arguments, char *line)
@@ -203,8 +219,6 @@ void advance_decimal_adress(Command *command, int *decimal_address)
 
     if (both_registers)
         *decimal_address += 1;
-    else if (command->command_type == STRING)
-        *decimal_address += strlen(command->arguments.arr[0]->name);
     else
         *decimal_address += command->arguments.amount;
 
