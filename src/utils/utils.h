@@ -19,51 +19,56 @@ typedef enum
     false = 0
 } bool;
 
-/*
- * Function to create a directory if it does not exist
+/**
+ * @brief Creates a directory if it does not exist.
  *
- * Input:
- *    dirname: a pointer to the name of the directory to be created
+ * This function checks if the specified directory exists by attempting to get its status.
+ * If the directory does not exist, it creates it.
+ *
+ * @param dirname The name of the directory to create.
  */
 void createDirIfNotExists(const char *);
 
-/*
- * Function to slice a string from the specified start index
+/**
+ * @brief Extracts a substring from a given string.
  *
- * Input:
- *     str: A pointer to the input string from which the slicing should begin
- *     start: The starting index from which the slicing should begin
+ * This function copies a substring of the input string starting from the specified index
+ * into a newly allocated memory.
  *
- * Output:
- *     Returns a pointer to a newly allocated substring, starting from 'start' index.
- *     The caller is responsible for freeing the memory using 'free' when it's no longer needed.
+ * @param str The input string to extract from.
+ * @param start The starting index of the substring.
+ * @return A newly allocated string containing the extracted substring.
  */
 char *slice(char *, int);
 
-/*
- * Function to trim leading and trailing spaces from a string
+/**
+ * @brief Trims leading and trailing whitespace from a string.
  *
- * Input:
- *    str: a pointer to the input string to be trimmed
+ * This function removes leading and trailing whitespace characters (including spaces, tabs, etc.)
+ * from the given string. It modifies the string in place and returns a pointer to the modified string.
  *
- * Output:
- *    returns a pointer to the modified string, which is the same as the input string.
- *    The function modifies the original string directly, so no memory is dynamically allocated.
+ * @param str The string to trim.
+ * @return A pointer to the trimmed string.
  */
 char *trim(char *);
 
+/**
+ * @brief Checks if a string represents a numeric value.
+ *
+ * This function determines whether a given string represents a valid numeric value.
+ *
+ * @param str The string to check.
+ * @return `true` if the string represents a numeric value, otherwise `false`.
+ */
 bool is_numeric(char *);
 
 /**
- * Converts an integer to its binary representation.
+ * @brief Converts an integer to its binary representation.
  *
- * This function takes an integer as input and returns an integer that represents
- * the binary representation of the input integer. The function calculates the
- * binary representation by repeatedly dividing the input number by 2 and building
- * up the binary value digit by digit.
+ * This function converts a given integer to its binary representation as an integer.
  *
- * @param n The integer to be converted to binary.
- * @return An integer representing the binary representation of the input integer.
+ * @param n The integer to convert.
+ * @return The binary representation of the integer.
  */
 int int_to_binary(int);
 

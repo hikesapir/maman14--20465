@@ -14,6 +14,33 @@ void createDirIfNotExists(const char *dirname)
         mkdir(dirname); /* If the directory does not exist, create it */
 }
 
+/** C90 APPROVED slice
+ * @brief Creates a new string containing a substring of the input string.
+ *
+ * This function creates a new string that contains a substring of the input string
+ * starting from the specified index 'start'. The newly created string is dynamically
+ * allocated, and the caller is responsible for freeing its memory.
+ *
+ * @param str The input string.
+ * @param start The starting index of the substring.
+ * @return A pointer to the newly allocated substring string.
+
+char *slice(char *str, int start)
+{
+    int length = strlen(str + start);    // Calculate the length of the substring
+    char *sub_str = malloc(length + 1);  // Allocate memory for the new substring
+
+    if (sub_str != NULL)
+    {
+        // Copy the substring of 'str' starting from 'start' into the new substring
+        strncpy(sub_str, str + start, length);
+        sub_str[length] = '\0'; // Add null-terminator at the end
+    }
+
+    return sub_str; // Return the newly allocated substring
+}
+*/
+
 char *slice(char *str, int start)
 {
     /* Copy the substring of 'str' starting from 'start' into a newly allocated memory */
@@ -42,7 +69,6 @@ char *trim(char *str)
     return str;
 }
 
-/* checks if a given string is a number */
 bool is_numeric(char *str)
 {
     int len;
