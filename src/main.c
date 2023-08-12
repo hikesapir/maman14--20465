@@ -38,7 +38,11 @@ int main(int argc, char *argv[])
 
             /* 1. Do Not Create the files if there is INVALID command or symbol and return */
             if (has_invalid_command(commands) || has_invalid_symbol(symbols))
+            {
+                free_symbols(&symbols);
+                free_commands(&commands);
                 continue;
+            }
 
             /* 2. For each command */
             /* header of base64 will be (amount of command lines, amount of variable lines) */
