@@ -77,10 +77,10 @@ Commands destructureFile(FILE *file)
     /* Reset the file pointer to the beginning of the file */
     rewind(file);
 
-    /* second scan (commands.array): place externs and entries to files and commands unknown binary */
-
     /* 1. Do Not Create the files if there is INVALID command or symbol and return */
-
+    if (has_invalid_command(commands) || has_invalid_symbol(symbols))
+        return;
+    /* second scan (commands.array): place externs and entries to files and commands unknown binary */
     /* 2. For each command */
     /* header of base64 will be (amount of command lines, amount of variable lines) */
     /* write command from binary to base64 file */

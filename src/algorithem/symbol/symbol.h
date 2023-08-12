@@ -86,4 +86,12 @@ void addNewSymbol(Symbols *, char *, SYMBOL_TYPE, int, int);
  */
 bool newSymbolIsValid(Symbols *, char *, SYMBOL_TYPE, int);
 
+/**
+ * Check for the presence of invalid symbols in the Symbols structure.
+ *
+ * @param symbols The Symbols structure to check.
+ * @return True if invalid symbols exist, false otherwise.
+ */
+bool has_invalid_symbol(Symbols);
+
 #endif

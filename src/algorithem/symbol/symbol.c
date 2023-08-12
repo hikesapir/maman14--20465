@@ -102,3 +102,12 @@ void insertNewLabel(char *line, Symbols *symbols, int decimal_address, int line_
     /* Add the new label symbol to the Symbols structure */
     addNewSymbol(symbols, label, LABEL, decimal_address, line_in_file);
 }
+
+bool has_invalid_symbol(Symbols symbols)
+{
+    int i;
+    for (i = 0; i < symbols.amount; i++)
+        if (symbols.array[i]->type == INVALID_SYMBOL)
+            return true;
+    return false;
+}

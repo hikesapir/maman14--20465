@@ -155,4 +155,12 @@ bool arguments_is_valid(Command *, CMD_Definition[], int);
  */
 void advance_decimal_adress(Command *, int *);
 
+/**
+ * Check for the presence of invalid commands in the Commands structure.
+ *
+ * @param commands The Commands structure to check.
+ * @return True if invalid commands exist, false otherwise.
+ */
+bool has_invalid_command(Commands);
+
 #endif

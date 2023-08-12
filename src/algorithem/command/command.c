@@ -208,3 +208,12 @@ void advance_decimal_adress(Command *command, int *decimal_address)
     if (command->command_type != DATA)
         *decimal_address += 1; /* For the line of the next command */
 }
+
+bool has_invalid_command(Commands commands)
+{
+    int i;
+    for (i = 0; i < commands.amount; i++)
+        if (commands.array[i]->command_type == INVALID_COMMAND)
+            return true;
+    return false;
+}
