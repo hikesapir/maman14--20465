@@ -54,6 +54,17 @@ char *trim(char *);
 
 bool is_numeric(char *);
 
-int decimalToBinary(int);
+/**
+ * Converts an integer to its binary representation.
+ *
+ * This function takes an integer as input and returns an integer that represents
+ * the binary representation of the input integer. The function calculates the
+ * binary representation by repeatedly dividing the input number by 2 and building
+ * up the binary value digit by digit.
+ *
+ * @param n The integer to be converted to binary.
+ * @return An integer representing the binary representation of the input integer.
+ */
+int int_to_binary(int);
 
 #endif /* UTILS_H */

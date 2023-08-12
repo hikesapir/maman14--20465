@@ -51,18 +51,18 @@ bool is_numeric(char *str)
     return ret && len == strlen(str);
 }
 
-int decimalToBinary(int decimalNumber)
+int int_to_binary(int n)
 {
-    int binaryNumber = 0;
-    int base = 1;
+    int binary = 0;
+    int digit, place = 1;
 
-    while (decimalNumber > 0)
+    while (n > 0)
     {
-        int remainder = decimalNumber % 2;
-        binaryNumber += remainder * base;
-        decimalNumber /= 2;
-        base *= 10;
+        digit = n % 2;
+        binary += digit * place;
+        place *= 10;
+        n /= 2;
     }
 
-    return binaryNumber;
+    return binary;
 }

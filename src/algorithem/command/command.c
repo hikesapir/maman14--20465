@@ -49,6 +49,8 @@ void insertNewCommand(char *line, Commands *commands, int *decimal_address, CMD_
 
     new_command->decimal_address = *decimal_address;
     advance_decimal_adress(new_command, decimal_address);
+
+    set_command_binary(new_command);
 }
 
 char *get_command_type(Command_Type *command_type, char *line, CMD_Definition command_definition[], int line_in_file)
@@ -244,4 +246,51 @@ void free_commands(Commands *commands)
     }
     /* Free memory for the array of Command pointers */
     free(commands->array);
+}
+
+void set_command_binary(Command *command)
+{
+    int command_type_binary, argument_type_binary;
+
+    if (command->command_type == STRING || command->command_type == DATA)
+        return;
+
+    /* A,R,E */
+    command->binary_representation[10] = 0;
+    command->binary_representation[11] = 0;
+
+    /* Command */
+    command_type_binary = int_to_binary((int)command->command_type);
+    command->binary_representation[3] = command_type_binary / 1000 % 10;
+    command->binary_representation[4] = command_type_binary / 100 % 10;
+    command->binary_representation[5] = command_type_binary / 10 % 10;
+    command->binary_representation[6] = command_type_binary % 10;
+
+    /* Source */
+    command->binary_representation[0] = 0;
+    command->binary_representation[1] = 0;
+    command->binary_representation[2] = 0;
+
+    /* Destination */
+    command->binary_representation[7] = 0;
+    command->binary_representation[8] = 0;
+    command->binary_representation[9] = 0;
+
+    if (command->arguments.amount > 0)
+    {
+        /* Destination */
+        argument_type_binary = int_to_binary((int)command->arguments.arr[0]->type);
+        command->binary_representation[7] = argument_type_binary / 100 % 10;
+        command->binary_representation[8] = argument_type_binary / 10 % 10;
+        command->binary_representation[9] = argument_type_binary % 10;
+    }
+
+    if (command->arguments.amount > 1)
+    {
+        /* Source */
+        argument_type_binary = int_to_binary((int)command->arguments.arr[1]->type);
+        command->binary_representation[0] = argument_type_binary / 100 % 10;
+        command->binary_representation[1] = argument_type_binary / 10 % 10;
+        command->binary_representation[2] = argument_type_binary % 10;
+    }
 }

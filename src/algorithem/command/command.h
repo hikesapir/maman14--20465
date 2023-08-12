@@ -175,4 +175,6 @@ bool has_invalid_command(Commands);
  */
 void free_commands(Commands *);
 
+void set_command_binary(Command *);
+
 #endif
