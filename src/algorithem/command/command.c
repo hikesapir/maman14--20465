@@ -7,6 +7,78 @@
 #include "../../utils/utils.h"
 #include "../../logger/logger.h"
 
+/* Decleration */
+
+/**
+ * @brief Determine the command type based on the input line.
+ *
+ * This function identifies the command type based on the command name in the input line.
+ * It searches for a match in the command_definition array and updates the command_type accordingly.
+ *
+ * @param command_type Pointer to store the detected command type.
+ * @param line The input line to analyze.
+ * @param command_definition An array of CMD_Definition representing command definitions.
+ * @param line_in_file The line number in the input file where the command is located.
+ * @return Pointer to the remaining part of the line after the command name,
+ *         or NULL if the command is undefined.
+ */
+char *get_command_type(Command_Type *, char *, CMD_Definition[], int);
+/**
+ * @brief Parse the string command arguments from the input line.
+ *
+ * This function populates the Arguments structure for a STRING command.
+ *
+ * @param command Pointer to store the parsed arguments.
+ * @param line The input line containing the arguments.
+ * @param line_in_file The line number in the input file where the command is located.
+ */
+void get_string_command_arguments(Command *, char *, int);
+/**
+ * @brief Parse and extract the arguments for a command.
+ *
+ * This function tokenizes the input line to separate individual arguments
+ * and stores them in the Arguments structure. It determines the argument type
+ * and allocates memory to store the argument name.
+ *
+ * @param arguments Pointer to store the parsed arguments.
+ * @param line The input line containing the arguments.
+ */
+void get_command_arguments(Arguments *, char *);
+/**
+ * @brief Check if command arguments are valid.
+ *
+ * This function checks if the given command's arguments are valid according to
+ * the specified command definitions. It ensures the correct number of arguments
+ * and their types match the expected format.
+ *
+ * @param command Pointer to the command structure.
+ * @param command_definition An array of CMD_Definition representing command definitions.
+ * @param line_in_file The line number in the input file where the command is located.
+ * @return True if the arguments are valid, otherwise false.
+ */
+bool arguments_is_valid(Command *, CMD_Definition[], int);
+/**
+ * @brief Advance the decimal address based on the command's arguments.
+ *
+ * This function updates the decimal address based on the number and types of
+ * arguments in the given command. It considers both registers and non-register
+ * arguments to determine the appropriate address advancement.
+ *
+ * @param command Pointer to the command structure.
+ * @param decimal_address A pointer to the decimal address value.
+ */
+void advance_decimal_adress(Command *, int *);
+/**
+ * @brief Set the binary representation for a command.
+ *
+ * This function sets the binary representation for the given command based on its type and arguments.
+ *
+ * @param command Pointer to the command structure.
+ */
+void set_command_binary(Command *);
+
+/* Implementation */
+
 void insertNewCommand(char *line, Commands *commands, int *decimal_address, CMD_Definition command_definition[], int line_in_file)
 {
     Command_Type command_type = INVALID_COMMAND;

@@ -8,6 +8,22 @@
 #include "../symbol/symbol.h"
 #include "../command/command.h"
 
+/* Decleration */
+
+/**
+ * @brief Converts arguments to binary representation based on their types and values.
+ *
+ * This function takes a list of commands and symbols, and for each command's arguments, it converts
+ * them to binary representation based on their types and values. It handles registers, variables (labels
+ * and externs), and static constants (numeric and string) accordingly.
+ *
+ * @param commands A pointer to the list of commands.
+ * @param symbols A pointer to the list of symbols.
+ */
+void set_arguments_binary(Commands *, Symbols *);
+
+/* Implementation */
+
 void destructureFile(FILE *file, Symbols *symbols, Commands *commands)
 {
     char line[LINE_LENGTH], *colon_ptr;          /* Buffer to store each line of the input file */

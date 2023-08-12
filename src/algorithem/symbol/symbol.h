@@ -51,34 +51,6 @@ void insertNewSymbol(char *, Symbols *, size_t, SYMBOL_TYPE, int);
 void insertNewLabel(char *, Symbols *, int, int);
 
 /**
- * @brief Add a new symbol to the symbols structure.
- *
- * This function adds a new symbol to the symbols structure after performing validity checks.
- * It allocates memory for the new symbol's name and properties, then adds it to the structure.
- *
- * @param symbols A pointer to the Symbols structure.
- * @param name The name of the new symbol.
- * @param type The type of the new symbol.
- * @param decimal_address The decimal address associated with the symbol.
- * @param line_in_file The line number in the input file where the symbol is located.
- */
-void addNewSymbol(Symbols *, char *, SYMBOL_TYPE, int, int);
-
-/**
- * @brief Check if a new symbol is valid before adding.
- *
- * This function checks whether a new symbol is valid for addition to the symbols structure.
- * It ensures that the symbol's name is not a duplicate and that it adheres to naming conventions.
- *
- * @param symbols A pointer to the Symbols structure.
- * @param name The name of the new symbol.
- * @param type The type of the new symbol.
- * @param line_in_file The line number in the input file where the symbol is located.
- * @return True if the new symbol is valid, otherwise false.
- */
-bool newSymbolIsValid(Symbols *, char *, SYMBOL_TYPE, int);
-
-/**
  * @brief Check if any symbol in the structure is invalid.
  *
  * This function checks if any symbol within the Symbols structure is marked as invalid.
