@@ -7,7 +7,10 @@
             "request": "launch",
             "program": "${workspaceFolder}/main.exe",
             "args": [
-                "input\\example"
+                "input\\valid\\valid-1",
+                "input\\valid\\valid-2",
+                "input\\invalid\\invalid-1",
+                "input\\invalid\\invalid-2",
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
