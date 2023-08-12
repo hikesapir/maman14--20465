@@ -9,11 +9,61 @@
 #include "../utils/utils.h"
 #include "../logger/logger.h"
 
+/* Decleration */
+
+/**
+ * @brief Creates a new stripped output file with the given file path.
+ *
+ * This function creates a new stripped output file based on the provided file path.
+ * The file name is modified by appending a ".am" suffix.
+ *
+ * @param filePath The path of the source file being stripped.
+ * @return A pointer to the newly created stripped output file.
+ */
 FILE *createStrippedFile(char *);
+/**
+ * @brief Strips macros from the source file and writes non-macro lines to the stripped file.
+ *
+ * This function reads the source file, extracts macros, and writes non-macro lines
+ * to the stripped file. It returns the collected macros in a `Macros` structure.
+ *
+ * @param sourceFile A pointer to the source file containing macros.
+ * @param strippedFile A pointer to the stripped output file being generated.
+ * @return A `Macros` structure containing the extracted macros.
+ */
 Macros stripMacrosFromSource(FILE *, FILE *);
+/**
+ * @brief Replaces macro instances with their content in the stripped file.
+ *
+ * This function replaces instances of macros with their corresponding content in the
+ * stripped output file. It uses a temporary file for processing and then overwrites
+ * the original stripped file.
+ *
+ * @param strippedFile A pointer to the stripped output file.
+ * @param macros A `Macros` structure containing the extracted macros.
+ */
 void replaceMacrosWithContent(FILE *, Macros);
+/**
+ * @brief Extracts the macro name from a macro declaration line.
+ *
+ * This function extracts the macro name from a macro declaration line.
+ * It removes the "mcro " prefix and returns a newly allocated string.
+ *
+ * @param source The macro declaration line containing the macro name.
+ * @return A pointer to the extracted macro name.
+ */
 char *getMacroName(char *);
+/**
+ * @brief Frees memory associated with the `Macros` structure.
+ *
+ * This function releases memory allocated for the `Macros` structure,
+ * including macro names and contents.
+ *
+ * @param macros A `Macros` structure containing the extracted macros.
+ */
 void freeMacros(Macros);
+
+/* Implementation */
 
 FILE *stripMacros(FILE *sourceFile, char *filePath)
 {
@@ -201,13 +251,24 @@ void freeMacros(Macros macros)
     /* init macro index and content index */
     int macro_index, content_index;
 
+    /* Loop through each macro */
     for (macro_index = 0; macro_index < macros.amountOfMacros; macro_index++)
     {
+        /* Free memory allocated for the macro's name */
         free(macros.array[macro_index]->name);
+
+        /* Loop through each line of content in the macro */
         for (content_index = 0; content_index < macros.array[macro_index]->amountOfLines; content_index++)
+            /* Free memory allocated for the content line */
             free(macros.array[macro_index]->content[content_index]);
+
+        /* Free memory allocated for the content array */
         free(macros.array[macro_index]->content);
+
+        /* Free memory allocated for the macro structure itself */
         free(macros.array[macro_index]);
     }
+
+    /* Free memory allocated for the array of macros */
     free(macros.array);
 }

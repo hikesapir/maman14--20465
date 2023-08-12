@@ -16,18 +16,18 @@ typedef struct macros
     int amountOfMacros;
 } Macros;
 
-/*
-This function takes a .as file and stripping it out of its macros
-The stripping process includes removing the macro lines,
-And planting them in the correct places.
-
-Input:
-    FILE *: a pointer to the FILE that we want to strip of macros
-    char *: a pointer to the new stripped file name
-
-Output:
-    returns a pointer to a new .as new FILE containing the stripped code
-*/
+/**
+ * @brief Strips macros from a source file and returns a new stripped file.
+ *
+ * This function takes a source file and strips it of its macros. The stripping process
+ * involves removing macro lines and replacing them in the correct places within the
+ * source code. The extracted macros are collected and stored in a `Macros` structure.
+ * The output is a newly created stripped file with the ".am" extension.
+ *
+ * @param sourceFile A pointer to the source file with macros.
+ * @param filePath A pointer to the new stripped file name.
+ * @return A pointer to a new FILE containing the stripped code.
+ */
 FILE *stripMacros(FILE *, char *);
 
 #endif
