@@ -149,13 +149,14 @@ void set_arguments_binary(Commands *commands, Symbols *symbols)
                         symbol = running_symbol;
                 }
 
-                /* Handle symbol types */
+                /* Symbol not found */
                 if (symbol == NULL)
                 {
                     command->command_type = INVALID_COMMAND;
                     break;
                 }
 
+                /* Handle symbol types */
                 if (symbol->type == LABEL)
                 {
                     /* Set binary representation for label addresses */
