@@ -83,19 +83,20 @@ void destructureFile(FILE *file, Symbols *symbols, Commands *commands)
 
 void set_arguments_binary(Commands *commands, Symbols *symbols)
 {
-    int command_index;          /* Index for iterating through commands */
-    int argument_index;         /* Index for iterating through arguments */
-    int symbols_index;          /* Index for iterating through symbols */
-    int binary_index;           /* Index for iterating through binary representation */
-    int binary_rep_index;       /* Index for iterating through binary representation */
+    int command_index;  /* Index for iterating through commands */
+    int argument_index; /* Index for iterating through arguments */
+    int symbols_index;  /* Index for iterating through symbols */
+    int binary_index;   /* Index for iterating through binary representation */
+
     int static_variable_binary; /* Binary representation of static variable */
-    int decimal_adress_binary;  /* Binary representation of decimal address */
-    int divider;                /* Divider used for extracting digits */
-    int register_number;        /* Extracted register number */
-    int binary_register_number; /* Binary representation of register number */
     int static_string_ascii;    /* ASCII value of the static string */
     int static_variable_value;  /* Value of the static variable */
     int binary_digit;           /* Individual binary digit */
+    int binary_register_number; /* Binary representation of register number */
+    int decimal_adress_binary;  /* Binary representation of decimal address */
+    int divider;                /* Divider used for extracting digits */
+    int register_number;        /* Extracted register number */
+
     Command *command;
     Argument *argument;
     Symbol *symbol, *running_symbol;
@@ -169,8 +170,8 @@ void set_arguments_binary(Commands *commands, Symbols *symbols)
                 if (symbol->type == EXTERN)
                 {
                     /* Set binary representation for extern references */
-                    for (binary_rep_index = 0; binary_rep_index < 11; binary_rep_index++)
-                        argument->binary_representation[binary_rep_index] = 0;
+                    for (binary_index = 0; binary_index < 11; binary_index++)
+                        argument->binary_representation[binary_index] = 0;
                     argument->binary_representation[11] = 1;
                 }
 
