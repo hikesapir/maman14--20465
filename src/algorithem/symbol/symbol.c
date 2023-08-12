@@ -6,7 +6,7 @@
 #include "../../utils/utils.h"
 #include "../../logger/logger.h"
 
-bool newSymbolIsValid(Symbols *symbols, char *name, SYMBOL_TYPE type)
+bool newSymbolIsValid(Symbols *symbols, char *name, SYMBOL_TYPE type, int line_in_file)
 {
     int i;
     Symbol *symbol;
@@ -23,14 +23,14 @@ bool newSymbolIsValid(Symbols *symbols, char *name, SYMBOL_TYPE type)
         /* Check for duplicate names with the same type (or same type except LABEL type) in the Symbols structure */
         if (name_exists && (both_not_labels || same_type))
         {
-            logError("Duplicat symbols '%s' found", name);
+            logError("line %d: Duplicate symbols '%s' found", line_in_file, name);
             return false;
         }
 
         /* Check for names with spaces, which are invalid for symbols */
         if (has_spaces)
         {
-            logError("Name '%s' has spaces", name);
+            logError("line %d: Name '%s' has spaces", line_in_file, name);
             return false;
         }
     }
@@ -38,12 +38,12 @@ bool newSymbolIsValid(Symbols *symbols, char *name, SYMBOL_TYPE type)
     return true;
 }
 
-void addNewSymbol(Symbols *symbols, char *name, SYMBOL_TYPE type, int decimal_address)
+void addNewSymbol(Symbols *symbols, char *name, SYMBOL_TYPE type, int decimal_address, int line_in_file)
 {
     Symbol *new_symbol = NULL;
 
     /* Check if the new symbol is valid before adding */
-    if (newSymbolIsValid(symbols, name, type))
+    if (newSymbolIsValid(symbols, name, type, line_in_file))
     {
         /* Increment the amount of symbols */
         symbols->amount += 1;
@@ -63,7 +63,7 @@ void addNewSymbol(Symbols *symbols, char *name, SYMBOL_TYPE type, int decimal_ad
     }
 }
 
-void insertNewSymbol(char *line, Symbols *symbols, size_t symbol_length, SYMBOL_TYPE type)
+void insertNewSymbol(char *line, Symbols *symbols, size_t symbol_length, SYMBOL_TYPE type, int line_in_file)
 {
     /* Trim leading and trailing spaces from 'line' */
     line = trim(line);
@@ -75,10 +75,10 @@ void insertNewSymbol(char *line, Symbols *symbols, size_t symbol_length, SYMBOL_
     line = trim(line);
 
     /* Add the new symbol to the Symbols structure */
-    addNewSymbol(symbols, line, type, 0);
+    addNewSymbol(symbols, line, type, 0, line_in_file);
 }
 
-void insertNewLabel(char *line, Symbols *symbols, int decimal_address)
+void insertNewLabel(char *line, Symbols *symbols, int decimal_address, int line_in_file)
 {
     char *label = NULL, *colon_ptr = NULL;
     int size_of_label = 0;
@@ -98,5 +98,5 @@ void insertNewLabel(char *line, Symbols *symbols, int decimal_address)
     label[size_of_label] = '\0';
 
     /* Add the new label symbol to the Symbols structure */
-    addNewSymbol(symbols, label, LABEL, decimal_address);
+    addNewSymbol(symbols, label, LABEL, decimal_address, line_in_file);
 }

@@ -7,7 +7,7 @@
 #include "../../utils/utils.h"
 #include "../../logger/logger.h"
 
-void insertNewCommand(char *line, Commands *commands, int *decimal_address, CMD_Definition command_definition[])
+void insertNewCommand(char *line, Commands *commands, int *decimal_address, CMD_Definition command_definition[], int line_in_file)
 {
     Command_Type command_type = INVALID;
     Command *new_command;
@@ -22,7 +22,7 @@ void insertNewCommand(char *line, Commands *commands, int *decimal_address, CMD_
     line = trim(line);
 
     /* Identify the command type and set it in the new_command */
-    line = get_command_type(&command_type, line, command_definition);
+    line = get_command_type(&command_type, line, command_definition, line_in_file);
     new_command->command_type = command_type;
 
     if (command_type == INVALID)
@@ -40,7 +40,7 @@ void insertNewCommand(char *line, Commands *commands, int *decimal_address, CMD_
     if (new_command->command_type == INVALID)
         return;
 
-    if (!arguments_is_valid(new_command, command_definition))
+    if (!arguments_is_valid(new_command, command_definition, line_in_file))
     {
         new_command->command_type = INVALID;
         return;
@@ -50,7 +50,7 @@ void insertNewCommand(char *line, Commands *commands, int *decimal_address, CMD_
     advance_decimal_adress(new_command, decimal_address);
 }
 
-char *get_command_type(Command_Type *command_type, char *line, CMD_Definition command_definition[])
+char *get_command_type(Command_Type *command_type, char *line, CMD_Definition command_definition[], int line_in_file)
 {
     int i = 0, length = 0;
     char *command_name;
@@ -75,7 +75,7 @@ char *get_command_type(Command_Type *command_type, char *line, CMD_Definition co
         }
 
     /* Log an error if the command is not found in the definitions */
-    logError("Undefined Command: %s", command_name);
+    logError("line %d: Undefined Command: %s", line_in_file, command_name);
 
     *command_type = INVALID;
     free(command_name); /* Free allocated memory */
@@ -149,7 +149,7 @@ void get_command_arguments(Arguments *arguments, char *line)
     }
 }
 
-bool arguments_is_valid(Command *command, CMD_Definition command_definition[])
+bool arguments_is_valid(Command *command, CMD_Definition command_definition[], int line_in_file)
 {
     int i;
     Arguments arguments = command->arguments;
@@ -161,7 +161,7 @@ bool arguments_is_valid(Command *command, CMD_Definition command_definition[])
 
     if (cmd_definition.args_count != arguments.amount && cmd_definition.args_count != -1)
     {
-        logError("Unexpected amount of arguments for command %s (expected:%d recieved:%d)", cmd_definition.name, cmd_definition.args_count, arguments.amount);
+        logError("line %d: Unexpected amount of arguments for command %s (expected:%d recieved:%d)", line_in_file, cmd_definition.name, cmd_definition.args_count, arguments.amount);
         return false;
     }
 
@@ -177,13 +177,13 @@ bool arguments_is_valid(Command *command, CMD_Definition command_definition[])
     case LEA: /* TWO ARGUMENT FIRST - ALL BUT STATIC, SECOND IS VARIABLE */
         if (arguments.arr[1]->type != VARIABLE)
         {
-            logError("Unexpected type of second argument for command lea");
+            logError("line %d: Unexpected type of second argument for command lea", line_in_file);
             return false;
         }
     default: /* FIRST ARGUMENT ALL BUT STATIC */
         if (arguments.arr[0]->type == STATIC)
         {
-            logError("Unexpected type of first argument for command %s", cmd_definition.name);
+            logError("line %d: Unexpected type of first argument for command %s", line_in_file, cmd_definition.name);
             return false;
         }
         else
