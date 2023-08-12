@@ -79,7 +79,6 @@ Commands destructureFile(FILE *file)
 
     /* second scan (commands.array): place externs and entries to files and commands unknown binary */
 
-    /* line_in_file UPDATE FOR LOGGER */
     /* 1. Do Not Create the files if there is INVALID command or symbol and return */
 
     /* 2. For each command */

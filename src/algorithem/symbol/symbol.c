@@ -41,26 +41,28 @@ bool newSymbolIsValid(Symbols *symbols, char *name, SYMBOL_TYPE type, int line_i
 void addNewSymbol(Symbols *symbols, char *name, SYMBOL_TYPE type, int decimal_address, int line_in_file)
 {
     Symbol *new_symbol = NULL;
+    bool symbol_is_valid = newSymbolIsValid(symbols, name, type, line_in_file);
+
+    /* Increment the amount of symbols */
+    symbols->amount += 1;
+
+    /* Reallocate memory for the Symbols array to accommodate the new symbol */
+    symbols->array = (Symbol **)realloc(symbols->array, symbols->amount * sizeof(Symbol *));
+
+    /* Allocate memory for the new symbol and add it to the Symbols array */
+    symbols->array[symbols->amount - 1] = malloc(sizeof(Symbol));
+    new_symbol = symbols->array[symbols->amount - 1];
+
+    /* Allocate memory for the new symbol name and set its properties */
+    new_symbol->name = malloc((strlen(name) + 1) * sizeof(char));
+    strcpy(new_symbol->name, name);
+    new_symbol->decimal_address = decimal_address;
 
     /* Check if the new symbol is valid before adding */
-    if (newSymbolIsValid(symbols, name, type, line_in_file))
-    {
-        /* Increment the amount of symbols */
-        symbols->amount += 1;
-
-        /* Reallocate memory for the Symbols array to accommodate the new symbol */
-        symbols->array = (Symbol **)realloc(symbols->array, symbols->amount * sizeof(Symbol *));
-
-        /* Allocate memory for the new symbol and add it to the Symbols array */
-        symbols->array[symbols->amount - 1] = malloc(sizeof(Symbol));
-        new_symbol = symbols->array[symbols->amount - 1];
-
-        /* Allocate memory for the new symbol name and set its properties */
-        new_symbol->name = malloc((strlen(name) + 1) * sizeof(char));
-        strcpy(new_symbol->name, name);
+    if (symbol_is_valid)
         new_symbol->type = type;
-        new_symbol->decimal_address = decimal_address;
-    }
+    else
+        new_symbol->type = INVALID_SYMBOL;
 }
 
 void insertNewSymbol(char *line, Symbols *symbols, size_t symbol_length, SYMBOL_TYPE type, int line_in_file)
