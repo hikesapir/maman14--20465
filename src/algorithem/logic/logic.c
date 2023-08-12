@@ -46,8 +46,12 @@ void destructureFile(FILE *file, Symbols *symbols, Commands *commands)
     /* First scan: Get all externs, entries, labels, and commands */
     while (fgets(line, LINE_LENGTH, file))
     {
+        /* If the line is empty */
+        if (trim(line)[0] == '\0')
+            continue;
+
         /* If the line contains ".extern" */
-        if (strstr(line, ".extern") != NULL)
+        else if (strstr(line, ".extern") != NULL)
             insertNewSymbol(line, symbols, strlen(".extern\0"), EXTERN, line_in_file);
 
         /* If the line contains ".entry" */
