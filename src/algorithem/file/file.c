@@ -1,5 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include "../../utils/utils.h"
 #include "../symbol/symbol.h"
@@ -8,13 +10,14 @@
 
 void write_entries(Symbols, char *);
 void write_externs(Commands, Symbols, char *);
-void binary_to_base64(Commands, Symbols, char *);
+void write_base64(Commands, char *);
+void binary_to_base64(char[3], const int[12]);
 
 void write_files(Commands commands, Symbols symbols, char *file_name)
 {
     write_entries(symbols, file_name);
     write_externs(commands, symbols, file_name);
-    binary_to_base64(commands, symbols, file_name);
+    write_base64(commands, file_name);
 }
 
 void write_entries(Symbols symbols, char *file_name)
@@ -78,20 +81,106 @@ void write_externs(Commands commands, Symbols symbols, char *file_name)
     }
 }
 
-void binary_to_base64(Commands commands, Symbols symbols, char *file_name)
+void write_base64(Commands commands, char *file_name)
 {
-    FILE *extern_file = create_output_file(file_name, ".ent");
+    FILE *base64_file = create_output_file(file_name, ".ob");
+    Command *command;
+    Argument *argument;
+    int i, command_index, argument_index, static_rows = 0, command_rows = 0;
+    bool both_registers;
+    char **base64_commands, **base64_static;
 
-    if (extern_file == NULL)
+    if (base64_file == NULL)
     {
-        logError("Could not create file %s.ent", file_name);
+        logError("Could not create file %s.ob", file_name);
         return;
     }
     else
         logInfo("File opened successfully!");
 
-    /* write command from binary to base64 file */
-    /* header of base64 will be (amount of command lines, amount of variable lines) */
+    base64_commands = malloc(sizeof(char *));
+    base64_static = malloc(sizeof(char *));
 
-    /* write to externs usage file */
+    for (command_index = 0; command_index < commands.amount; command_index++)
+    {
+        command = commands.array[command_index];
+
+        if (command->command_type == DATA || command->command_type == STRING)
+            for (argument_index = 0; argument_index < command->arguments.amount; argument_index++)
+            {
+                argument = command->arguments.arr[argument_index];
+
+                static_rows += 1;
+                base64_static = (char **)realloc(base64_static, static_rows * sizeof(char *));
+                base64_static[static_rows - 1] = malloc(3 * sizeof(char));
+
+                binary_to_base64(base64_static[static_rows - 1], argument->binary_representation);
+            }
+        else
+        {
+            /* for the command binary representation */
+            command_rows += 1;
+            base64_commands = (char **)realloc(base64_commands, command_rows * sizeof(char *));
+            base64_commands[command_rows - 1] = malloc(3 * sizeof(char));
+            binary_to_base64(base64_commands[command_rows - 1], command->binary_representation);
+
+            both_registers =
+                (command->arguments.amount == 2 &&
+                 command->arguments.arr[0]->type == REGISTER &&
+                 command->arguments.arr[1]->type == REGISTER);
+
+            if (both_registers)
+            {
+                command_rows += 1;
+                for (i = 9; i >= 5; i--)
+                    command->arguments.arr[0]->binary_representation[i] = command->arguments.arr[1]->binary_representation[i];
+                base64_commands = (char **)realloc(base64_commands, command_rows * sizeof(char *));
+                base64_commands[command_rows - 1] = malloc(3 * sizeof(char));
+                binary_to_base64(base64_commands[command_rows - 1], command->arguments.arr[0]->binary_representation);
+            }
+            else
+                for (argument_index = 0; argument_index < command->arguments.amount; argument_index++)
+                {
+                    argument = command->arguments.arr[argument_index];
+
+                    command_rows += 1;
+                    base64_commands = (char **)realloc(base64_commands, command_rows * sizeof(char *));
+                    base64_commands[command_rows - 1] = malloc(3 * sizeof(char));
+                    binary_to_base64(base64_commands[command_rows - 1], argument->binary_representation);
+                }
+        }
+    }
+
+    fprintf(base64_file, "%d\t%d", command_rows, static_rows);
+
+    for (i = 0; i < command_rows; i++)
+        fprintf(base64_file, "\n%s", base64_commands[i]);
+
+    for (i = 0; i < static_rows; i++)
+        fprintf(base64_file, "\n%s", base64_static[i]);
+}
+
+void binary_to_base64(char base64[3], const int binaryArray[12])
+{
+    int bit_index, first_character_index = 0, second_character_index = 0;
+    char base64_chars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+    int i;
+    for (i = 0; i < 12; i++)
+    {
+        printf("%d", binaryArray[i]);
+    }
+    printf("\n");
+
+    /* bit 0-5 = first charachter */
+    for (bit_index = 5; bit_index >= 0; bit_index--)
+        first_character_index += binaryArray[bit_index] * pow(2, 5 - bit_index);
+    base64[0] = base64_chars[first_character_index];
+
+    /* bit 6-11 = last charachter */
+    for (bit_index = 11; bit_index >= 6; bit_index--)
+        second_character_index += binaryArray[bit_index] * pow(2, 11 - bit_index);
+    base64[1] = base64_chars[second_character_index];
+
+    base64[2] = '\0';
 }

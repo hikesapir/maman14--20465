@@ -145,10 +145,10 @@ void set_arguments_binary(Commands *commands, Symbols *symbols)
 
                 /* Set binary representation based on argument index (destination or source) */
                 if (argument_index == 0)
-                    for (divider = 1, binary_index = 9; binary_index >= 5; binary_index--, divider *= 10)
+                    for (divider = 1, binary_index = 4; binary_index >= 0; binary_index--, divider *= 10)
                         argument->binary_representation[binary_index] = binary_register_number / divider % 10;
                 else
-                    for (divider = 1, binary_index = 4; binary_index >= 0; binary_index--, divider *= 10)
+                    for (divider = 1, binary_index = 9; binary_index >= 5; binary_index--, divider *= 10)
                         argument->binary_representation[binary_index] = binary_register_number / divider % 10;
                 break;
 
@@ -195,7 +195,6 @@ void set_arguments_binary(Commands *commands, Symbols *symbols)
                 break;
 
             case STATIC:
-                /* Initialize bits 10 and 11 */
                 argument->binary_representation[10] = 0;
                 argument->binary_representation[11] = 0;
                 static_variable_value = 0;
@@ -218,7 +217,12 @@ void set_arguments_binary(Commands *commands, Symbols *symbols)
                 }
 
                 /* Convert static variable binary representation */
-                for (binary_index = 9, divider = 1; binary_index >= 0; binary_index--, divider *= 10)
+                if (command->command_type == STRING || command->command_type == DATA)
+                    binary_index = 11;
+                else
+                    binary_index = 9;
+
+                for (divider = 1; binary_index >= 0; binary_index--, divider *= 10)
                 {
                     binary_digit = static_variable_binary / divider % 10;
                     if (static_variable_value < 0)

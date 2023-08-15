@@ -174,6 +174,7 @@ void get_string_command_arguments(Command *command, char *line, int line_in_file
 
     /* If the input match the expected format */
     if (*line == '"' && *(line + strlen(line) - 1) == '"')
+    {
         for (i = 1; i < strlen(line) - 1; i++)
         {
             argument = line[i];
@@ -191,6 +192,18 @@ void get_string_command_arguments(Command *command, char *line, int line_in_file
             new_argument->type = STATIC;
             new_argument->decimal_address = 0;
         }
+
+        /* Extract and store the \0 argument */
+        arguments->amount += 1;
+        arguments->arr = (Argument **)realloc(arguments->arr, arguments->amount * sizeof(Argument *));
+        arguments->arr[arguments->amount - 1] = malloc(sizeof(Argument));
+        new_argument = arguments->arr[arguments->amount - 1];
+
+        new_argument->name = malloc(1 * sizeof(char));
+        new_argument->name[0] = '\0';
+        new_argument->type = STATIC;
+        new_argument->decimal_address = 0;
+    }
     else
     {
         logError("line %d: .string content is not wraped with quotes (\"...\")", line_in_file);
@@ -291,12 +304,18 @@ void advance_decimal_adress(Command *command, int *decimal_address)
     }
     else
         for (arg_index = 0; arg_index < command->arguments.amount; arg_index++)
-        {
-            *decimal_address += 1;
-            command->arguments.arr[arg_index]->decimal_address = *decimal_address;
-        }
+            if (command->command_type == DATA || command->command_type == STRING)
+            {
+                command->arguments.arr[arg_index]->decimal_address = *decimal_address;
+                *decimal_address += 1;
+            }
+            else
+            {
+                *decimal_address += 1;
+                command->arguments.arr[arg_index]->decimal_address = *decimal_address;
+            }
 
-    if (command->command_type != DATA)
+    if (command->command_type != DATA && command->command_type != STRING)
         *decimal_address += 1; /* For the line of the next command */
 }
 
@@ -364,7 +383,7 @@ void set_command_binary(Command *command)
     command->binary_representation[8] = 0;
     command->binary_representation[9] = 0;
 
-    if (command->arguments.amount > 0)
+    if (command->arguments.amount == 1)
     {
         /* Destination */
         argument_type_binary = int_to_binary((int)command->arguments.arr[0]->type);
@@ -373,12 +392,18 @@ void set_command_binary(Command *command)
         command->binary_representation[9] = argument_type_binary % 10;
     }
 
-    if (command->arguments.amount > 1)
+    if (command->arguments.amount == 2)
     {
         /* Source */
-        argument_type_binary = int_to_binary((int)command->arguments.arr[1]->type);
+        argument_type_binary = int_to_binary((int)command->arguments.arr[0]->type);
         command->binary_representation[0] = argument_type_binary / 100 % 10;
         command->binary_representation[1] = argument_type_binary / 10 % 10;
         command->binary_representation[2] = argument_type_binary % 10;
+
+        /* Destination */
+        argument_type_binary = int_to_binary((int)command->arguments.arr[1]->type);
+        command->binary_representation[7] = argument_type_binary / 100 % 10;
+        command->binary_representation[8] = argument_type_binary / 10 % 10;
+        command->binary_representation[9] = argument_type_binary % 10;
     }
 }
