@@ -12,16 +12,6 @@
 /* Decleration */
 
 /**
- * @brief Creates a new stripped output file with the given file path.
- *
- * This function creates a new stripped output file based on the provided file path.
- * The file name is modified by appending a ".am" suffix.
- *
- * @param filePath The path of the source file being stripped.
- * @return A pointer to the newly created stripped output file.
- */
-FILE *createStrippedFile(char *);
-/**
  * @brief Strips macros from the source file and writes non-macro lines to the stripped file.
  *
  * This function reads the source file, extracts macros, and writes non-macro lines
@@ -68,10 +58,19 @@ void freeMacros(Macros);
 FILE *stripMacros(FILE *sourceFile, char *filePath)
 {
     /* Create the new stripped file */
-    FILE *stripped_file = createStrippedFile(filePath);
+    FILE *stripped_file = create_output_file(filePath, ".am");
+    Macros macros;
+
+    if (stripped_file == NULL)
+    {
+        logError("Could not create file %s.am", filePath);
+        return NULL;
+    }
+    else
+        logInfo("File opened successfully!");
 
     /* get all macros before stripping the source file */
-    Macros macros = stripMacrosFromSource(sourceFile, stripped_file);
+    macros = stripMacrosFromSource(sourceFile, stripped_file);
 
     /* closing the source file (end of usage) */
     fclose(sourceFile);
@@ -82,29 +81,6 @@ FILE *stripMacros(FILE *sourceFile, char *filePath)
 
     /* free macros resources (end of usage) */
     freeMacros(macros);
-
-    return stripped_file;
-}
-
-FILE *createStrippedFile(char *filePath)
-{
-    FILE *stripped_file;
-    char fullFileName[PATH_MAX];
-
-    createDirIfNotExists(OUTPUT_FOLDER);
-
-    strcpy(fullFileName, OUTPUT_FOLDER);      /* Add output to the fullFileName*/
-    strcat(fullFileName, "\\");               /* Add \ to the fullFileName*/
-    strcat(fullFileName, basename(filePath)); /* Copy fileName into fullFileName */
-    strcat(fullFileName, ".am");              /* Add the .am suffix to fullFileName */
-
-    logInfo("oppening %s", fullFileName);
-    stripped_file = fopen(fullFileName, "w+"); /* read and write */
-
-    if (stripped_file == NULL)
-        logError("Could not open file %s", fullFileName);
-    else
-        logInfo("File opened successfully!");
 
     return stripped_file;
 }

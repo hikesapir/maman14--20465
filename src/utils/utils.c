@@ -2,8 +2,10 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdio.h>
+#include <libgen.h>
 
 #include "utils.h"
+#include "../logger/logger.h"
 
 void createDirIfNotExists(const char *dirname)
 {
@@ -94,4 +96,30 @@ int int_to_binary(int n)
     }
 
     return binary;
+}
+
+FILE *create_output_file(char *file_name, const char *file_extention)
+{
+    FILE *file_ptr;
+    char fullFileName[PATH_MAX], file_output_folder[PATH_MAX];
+
+    createDirIfNotExists(OUTPUT_FOLDER);
+
+    strcpy(file_output_folder, OUTPUT_FOLDER);       /* Add output to the fullFileName*/
+    strcat(file_output_folder, "\\");                /* Add \ to the fullFileName*/
+    strcat(file_output_folder, basename(file_name)); /* Copy fileName into fullFileName */
+
+    createDirIfNotExists(file_output_folder);
+
+    strcpy(fullFileName, OUTPUT_FOLDER);       /* Add output to the fullFileName*/
+    strcat(fullFileName, "\\");                /* Add \ to the fullFileName*/
+    strcat(fullFileName, basename(file_name)); /* Copy fileName into fullFileName */
+    strcat(fullFileName, "\\");                /* Add \ to the fullFileName*/
+    strcat(fullFileName, basename(file_name)); /* Copy fileName into fullFileName */
+    strcat(fullFileName, file_extention);      /* Add the .ent suffix to fullFileName */
+
+    logInfo("oppening %s", fullFileName);
+    file_ptr = fopen(fullFileName, "w+"); /* read and write */
+
+    return file_ptr;
 }

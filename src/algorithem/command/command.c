@@ -276,15 +276,25 @@ bool arguments_is_valid(Command *command, CMD_Definition command_definition[], i
 
 void advance_decimal_adress(Command *command, int *decimal_address)
 {
+    int arg_index;
     bool both_registers =
         (command->arguments.amount == 2 &&
          command->arguments.arr[0]->type == REGISTER &&
          command->arguments.arr[1]->type == REGISTER);
 
     if (both_registers)
+    {
         *decimal_address += 1;
+
+        command->arguments.arr[0]->decimal_address = *decimal_address;
+        command->arguments.arr[1]->decimal_address = *decimal_address;
+    }
     else
-        *decimal_address += command->arguments.amount;
+        for (arg_index = 0; arg_index < command->arguments.amount; arg_index++)
+        {
+            *decimal_address += 1;
+            command->arguments.arr[arg_index]->decimal_address = *decimal_address;
+        }
 
     if (command->command_type != DATA)
         *decimal_address += 1; /* For the line of the next command */

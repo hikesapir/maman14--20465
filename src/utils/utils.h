@@ -1,6 +1,8 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <stdio.h>
+
 /* Constants */
 #define LINE_LENGTH 80
 #define OUTPUT_FOLDER "output"
@@ -71,5 +73,7 @@ bool is_numeric(char *);
  * @return The binary representation of the integer.
  */
 int int_to_binary(int);
+
+FILE *create_output_file(char *, const char *);
 
 #endif /* UTILS_H */

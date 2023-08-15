@@ -6,6 +6,7 @@
 #include "algorithem/logic/logic.h"
 #include "algorithem/command/command.h"
 #include "algorithem/symbol/symbol.h"
+#include "algorithem/file/file.h"
 
 int main(int argc, char *argv[])
 {
@@ -34,6 +35,12 @@ int main(int argc, char *argv[])
             /* Remove macros and process the file */
             file = stripMacros(file, argv[i]);
 
+            if (file == NULL)
+            {
+                logError("Ending due to previous errors");
+                continue;
+            }
+
             /* Extract symbols and commands from the file */
             destructureFile(file, &symbols, &commands);
 
@@ -48,14 +55,7 @@ int main(int argc, char *argv[])
                 continue;
             }
 
-            /* TODO: Process each command */
-
-            /* write the entries to the entries file */
-
-            /* write command from binary to base64 file */
-            /* header of base64 will be (amount of command lines, amount of variable lines) */
-
-            /* write to externs usage file */
+            write_files(commands, symbols, argv[i]);
 
             /* Free memory associated with Symbols and Commands */
             free_symbols(&symbols);
