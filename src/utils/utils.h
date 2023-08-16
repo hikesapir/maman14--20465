@@ -74,6 +74,16 @@ bool is_numeric(char *);
  */
 int int_to_binary(int);
 
+/**
+ * @brief Create and open an output file for writing.
+ *
+ * This function creates and opens an output file for writing in the specified output folder.
+ * The output file's name is constructed by combining the provided file name, its basename, and the given file extension.
+ *
+ * @param file_name The base name of the output file.
+ * @param file_extention The extension to be added to the output file name.
+ * @return A pointer to the opened FILE structure, or NULL if an error occurred.
+ */
 FILE *create_output_file(char *, const char *);
 
 #endif /* UTILS_H */
