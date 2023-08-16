@@ -8,9 +8,45 @@
 #include "../command/command.h"
 #include "../../logger/logger.h"
 
+/**
+ * @brief Write symbol entries to an output file.
+ *
+ * This function writes the symbol entries to an output file with the ".ent" extension.
+ *
+ * @param symbols A Symbols structure containing symbol information.
+ * @param file_name The base name of the output file.
+ */
 void write_entries(Symbols, char *);
+
+/**
+ * @brief Write external symbols to an output file.
+ *
+ * This function writes external symbols and their references to an output file with the ".ext" extension.
+ *
+ * @param commands A Commands structure containing command information.
+ * @param symbols A Symbols structure containing symbol information.
+ * @param file_name The base name of the output file.
+ */
 void write_externs(Commands, Symbols, char *);
+
+/**
+ * @brief Write base64-encoded commands and static data to an output file.
+ *
+ * This function writes base64-encoded commands and static data to an output file with the ".ob" extension.
+ *
+ * @param commands A Commands structure containing command information.
+ * @param file_name The base name of the output file.
+ */
 void write_base64(Commands, char *);
+
+/**
+ * @brief Convert binary to base64 representation.
+ *
+ * This function converts a binary array to its base64 representation and stores it in the provided base64 array.
+ *
+ * @param base64 An array to store the resulting base64 characters (at least 3 characters in size).
+ * @param binaryArray The binary representation array (12 bits).
+ */
 void binary_to_base64(char[3], const int[12]);
 
 void write_files(Commands commands, Symbols symbols, char *file_name)
