@@ -8,6 +8,18 @@
 #include "algorithem/symbol/symbol.h"
 #include "algorithem/file/file.h"
 
+/**
+ * @brief The main entry point of the program.
+ *
+ * This function processes command-line arguments representing filenames,
+ * validates and processes each file, extracts symbols and commands,
+ * checks for invalid symbols or commands, and generates corresponding output files.
+ * The main process involves stripping macros, deconstructing files, and writing outputs.
+ *
+ * @param argc The number of command-line arguments.
+ * @param argv An array of strings representing command-line arguments.
+ * @return The exit status code.
+ */
 int main(int argc, char *argv[])
 {
     int i;
@@ -55,6 +67,7 @@ int main(int argc, char *argv[])
                 continue;
             }
 
+            /* Write output files */
             write_files(commands, symbols, argv[i]);
 
             /* Free memory associated with Symbols and Commands */
