@@ -187,26 +187,29 @@ void write_base64(Commands commands, char *file_name)
         }
     }
 
-    fprintf(base64_file, "%d\t%d", command_rows, static_rows);
+    fprintf(base64_file, "%d %d", command_rows, static_rows);
 
     for (i = 0; i < command_rows; i++)
+    {
         fprintf(base64_file, "\n%s", base64_commands[i]);
+        free(base64_commands[i]);
+    }
+    free(base64_commands);
 
     for (i = 0; i < static_rows; i++)
+    {
         fprintf(base64_file, "\n%s", base64_static[i]);
+        free(base64_static[i]);
+    }
+    free(base64_static);
+
+    fclose(base64_file);
 }
 
 void binary_to_base64(char base64[3], const int binaryArray[12])
 {
     int bit_index, first_character_index = 0, second_character_index = 0;
     char base64_chars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
-    int i;
-    for (i = 0; i < 12; i++)
-    {
-        printf("%d", binaryArray[i]);
-    }
-    printf("\n");
 
     /* bit 0-5 = first charachter */
     for (bit_index = 5; bit_index >= 0; bit_index--)

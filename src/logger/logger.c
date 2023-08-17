@@ -50,6 +50,8 @@ void logInfo(const char *info, ...)
     va_start(args, info);
     printFormatted(fullMessage, args);
     va_end(args);
+
+    free(fullMessage);
 }
 
 void logError(const char *error, ...)
@@ -64,4 +66,6 @@ void logError(const char *error, ...)
     va_start(args, error);
     printFormatted(fullMessage, args);
     va_end(args);
+
+    free(fullMessage);
 }

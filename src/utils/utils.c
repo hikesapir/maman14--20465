@@ -1,8 +1,11 @@
+#include <sys/types.h>
 #include <sys/stat.h>
+#include <unistd.h>
 #include <ctype.h>
 #include <string.h>
 #include <stdio.h>
 #include <libgen.h>
+#include <stdlib.h>
 
 #include "utils.h"
 #include "../logger/logger.h"
@@ -13,40 +16,7 @@ void createDirIfNotExists(const char *dirname)
 
     /* Check if the directory exists by trying to get its status */
     if (stat(dirname, &st) == -1)
-        mkdir(dirname); /* If the directory does not exist, create it */
-}
-
-/** C90 APPROVED slice
- * @brief Creates a new string containing a substring of the input string.
- *
- * This function creates a new string that contains a substring of the input string
- * starting from the specified index 'start'. The newly created string is dynamically
- * allocated, and the caller is responsible for freeing its memory.
- *
- * @param str The input string.
- * @param start The starting index of the substring.
- * @return A pointer to the newly allocated substring string.
-
-char *slice(char *str, int start)
-{
-    int length = strlen(str + start);    // Calculate the length of the substring
-    char *sub_str = malloc(length + 1);  // Allocate memory for the new substring
-
-    if (sub_str != NULL)
-    {
-        // Copy the substring of 'str' starting from 'start' into the new substring
-        strncpy(sub_str, str + start, length);
-        sub_str[length] = '\0'; // Add null-terminator at the end
-    }
-
-    return sub_str; // Return the newly allocated substring
-}
-*/
-
-char *slice(char *str, int start)
-{
-    /* Copy the substring of 'str' starting from 'start' into a newly allocated memory */
-    return strdup(str + start);
+        mkdir(dirname, 0777); /* If the directory does not exist, create it */
 }
 
 char *trim(char *str)
@@ -106,15 +76,15 @@ FILE *create_output_file(char *file_name, const char *file_extention)
     createDirIfNotExists(OUTPUT_FOLDER);
 
     strcpy(file_output_folder, OUTPUT_FOLDER);       /* Add output to the fullFileName*/
-    strcat(file_output_folder, "\\");                /* Add \ to the fullFileName*/
+    strcat(file_output_folder, "/");                 /* Add \ to the fullFileName*/
     strcat(file_output_folder, basename(file_name)); /* Copy fileName into fullFileName */
 
     createDirIfNotExists(file_output_folder);
 
     strcpy(fullFileName, OUTPUT_FOLDER);       /* Add output to the fullFileName*/
-    strcat(fullFileName, "\\");                /* Add \ to the fullFileName*/
+    strcat(fullFileName, "/");                 /* Add \ to the fullFileName*/
     strcat(fullFileName, basename(file_name)); /* Copy fileName into fullFileName */
-    strcat(fullFileName, "\\");                /* Add \ to the fullFileName*/
+    strcat(fullFileName, "/");                 /* Add \ to the fullFileName*/
     strcat(fullFileName, basename(file_name)); /* Copy fileName into fullFileName */
     strcat(fullFileName, file_extention);      /* Add the .ent suffix to fullFileName */
 

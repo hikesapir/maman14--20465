@@ -32,18 +32,6 @@ typedef enum
 void createDirIfNotExists(const char *);
 
 /**
- * @brief Extracts a substring from a given string.
- *
- * This function copies a substring of the input string starting from the specified index
- * into a newly allocated memory.
- *
- * @param str The input string to extract from.
- * @param start The starting index of the substring.
- * @return A newly allocated string containing the extracted substring.
- */
-char *slice(char *, int);
-
-/**
  * @brief Trims leading and trailing whitespace from a string.
  *
  * This function removes leading and trailing whitespace characters (including spaces, tabs, etc.)

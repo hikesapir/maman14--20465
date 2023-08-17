@@ -102,7 +102,7 @@ void insertNewSymbol(char *line, Symbols *symbols, size_t symbol_length, SYMBOL_
     line = trim(line);
 
     /* Slice the string starting from 'symbol_length' */
-    line = slice(line, symbol_length);
+    line = line + symbol_length;
 
     /* Trim leading and trailing spaces from the sliced string */
     line = trim(line);
@@ -132,6 +132,8 @@ void insertNewLabel(char *line, Symbols *symbols, int decimal_address, int line_
 
     /* Add the new label symbol to the Symbols structure */
     addNewSymbol(symbols, label, LABEL, decimal_address, line_in_file);
+
+    free(label);
 }
 
 bool has_invalid_symbol(Symbols symbols)
