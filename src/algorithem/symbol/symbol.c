@@ -81,11 +81,11 @@ void addNewSymbol(Symbols *symbols, char *name, SYMBOL_TYPE type, int decimal_ad
     symbols->array = (Symbol **)realloc(symbols->array, symbols->amount * sizeof(Symbol *));
 
     /* Allocate memory for the new symbol and add it to the Symbols array */
-    symbols->array[symbols->amount - 1] = malloc(sizeof(Symbol));
+    symbols->array[symbols->amount - 1] = (Symbol *)malloc(sizeof(Symbol));
     new_symbol = symbols->array[symbols->amount - 1];
 
     /* Allocate memory for the new symbol name and set its properties */
-    new_symbol->name = malloc((strlen(name) + 1) * sizeof(char));
+    new_symbol->name = (char *)malloc((strlen(name) + 1) * sizeof(char));
     strcpy(new_symbol->name, name);
     new_symbol->decimal_address = decimal_address;
 
@@ -126,7 +126,7 @@ void insertNewLabel(char *line, Symbols *symbols, int decimal_address, int line_
     size_of_label = colon_ptr - line;
 
     /* Allocate memory for the label and copy its name from 'line' */
-    label = malloc(sizeof(char) * (size_of_label + 1));
+    label = (char *)malloc(sizeof(char) * (size_of_label + 1));
     memcpy(label, line, size_of_label);
     label[size_of_label] = '\0';
 

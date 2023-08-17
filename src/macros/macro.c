@@ -104,7 +104,7 @@ Macros stripMacrosFromSource(FILE *sourceFile, FILE *strippedFile)
             /* create new Macro */
             macros.amountOfMacros += 1;
             macros.array = (Macro **)realloc(macros.array, macros.amountOfMacros * sizeof(Macro *));
-            macros.array[macros.amountOfMacros - 1] = malloc(sizeof(Macro));
+            macros.array[macros.amountOfMacros - 1] = (Macro *)malloc(sizeof(Macro));
             newMacro = macros.array[macros.amountOfMacros - 1];
 
             /* set the macro's name */
@@ -120,7 +120,7 @@ Macros stripMacrosFromSource(FILE *sourceFile, FILE *strippedFile)
                 /* create new place for the line */
                 newMacro->amountOfLines += 1;
                 newMacro->content = (char **)realloc(newMacro->content, newMacro->amountOfLines * sizeof(char *));
-                newMacro->content[newMacro->amountOfLines - 1] = malloc(sizeof(line));
+                newMacro->content[newMacro->amountOfLines - 1] = (char *)malloc(sizeof(line));
 
                 /* save the line into the macro's content */
                 strcpy(newMacro->content[newMacro->amountOfLines - 1], line);
@@ -210,7 +210,7 @@ char *getMacroName(char *source)
     charactersToMCRO = locationOfMCRO - source;
     macroNameLength = sourceLength - charactersToMCRO - 5;
 
-    target = malloc((macroNameLength) * sizeof(char));
+    target = (char *)malloc((macroNameLength) * sizeof(char));
 
     /* "mcro <MACRO NAME>" */
     for (i = charactersToMCRO + 5, j = 0; i <= sourceLength; i++, j++)

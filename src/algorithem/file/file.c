@@ -134,8 +134,8 @@ void write_base64(Commands commands, char *file_name)
     else
         logInfo("File opened successfully!");
 
-    base64_commands = malloc(sizeof(char *));
-    base64_static = malloc(sizeof(char *));
+    base64_commands = (char **)malloc(sizeof(char *));
+    base64_static = (char **)malloc(sizeof(char *));
 
     for (command_index = 0; command_index < commands.amount; command_index++)
     {
@@ -148,7 +148,7 @@ void write_base64(Commands commands, char *file_name)
 
                 static_rows += 1;
                 base64_static = (char **)realloc(base64_static, static_rows * sizeof(char *));
-                base64_static[static_rows - 1] = malloc(3 * sizeof(char));
+                base64_static[static_rows - 1] = (char *)malloc(3 * sizeof(char));
 
                 binary_to_base64(base64_static[static_rows - 1], argument->binary_representation);
             }
@@ -157,7 +157,7 @@ void write_base64(Commands commands, char *file_name)
             /* for the command binary representation */
             command_rows += 1;
             base64_commands = (char **)realloc(base64_commands, command_rows * sizeof(char *));
-            base64_commands[command_rows - 1] = malloc(3 * sizeof(char));
+            base64_commands[command_rows - 1] = (char *)malloc(3 * sizeof(char));
             binary_to_base64(base64_commands[command_rows - 1], command->binary_representation);
 
             both_registers =
@@ -171,7 +171,7 @@ void write_base64(Commands commands, char *file_name)
                 for (i = 9; i >= 5; i--)
                     command->arguments.arr[0]->binary_representation[i] = command->arguments.arr[1]->binary_representation[i];
                 base64_commands = (char **)realloc(base64_commands, command_rows * sizeof(char *));
-                base64_commands[command_rows - 1] = malloc(3 * sizeof(char));
+                base64_commands[command_rows - 1] = (char *)malloc(3 * sizeof(char));
                 binary_to_base64(base64_commands[command_rows - 1], command->arguments.arr[0]->binary_representation);
             }
             else
@@ -181,7 +181,7 @@ void write_base64(Commands commands, char *file_name)
 
                     command_rows += 1;
                     base64_commands = (char **)realloc(base64_commands, command_rows * sizeof(char *));
-                    base64_commands[command_rows - 1] = malloc(3 * sizeof(char));
+                    base64_commands[command_rows - 1] = (char *)malloc(3 * sizeof(char));
                     binary_to_base64(base64_commands[command_rows - 1], argument->binary_representation);
                 }
         }

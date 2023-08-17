@@ -87,7 +87,7 @@ void insertNewCommand(char *line, Commands *commands, int *decimal_address, CMD_
     /* add new command */
     commands->amount++;
     commands->array = (Command **)realloc(commands->array, commands->amount * sizeof(Command *));
-    commands->array[commands->amount - 1] = malloc(sizeof(Command));
+    commands->array[commands->amount - 1] = (Command *)malloc(sizeof(Command));
     new_command = commands->array[commands->amount - 1];
 
     /* Allocate memory for the arguments array */
@@ -141,7 +141,7 @@ char *get_command_type(Command_Type *command_type, char *line, CMD_Definition co
     length = i;
 
     /* Allocate memory for the command name and copy it */
-    command_name = malloc(sizeof(char) * (length + 1));
+    command_name = (char *)malloc(sizeof(char) * (length + 1));
     strncpy(command_name, line, length);
     command_name[length] = '\0';
 
@@ -181,12 +181,12 @@ void get_string_command_arguments(Command *command, char *line, int line_in_file
 
             arguments->amount += 1;
             arguments->arr = (Argument **)realloc(arguments->arr, arguments->amount * sizeof(Argument *));
-            arguments->arr[arguments->amount - 1] = malloc(sizeof(Argument));
+            arguments->arr[arguments->amount - 1] = (Argument *)malloc(sizeof(Argument));
             new_argument = arguments->arr[arguments->amount - 1];
 
             /* Extract and store the string argument (without quotes) */
 
-            new_argument->name = malloc(2 * sizeof(char));
+            new_argument->name = (char *)malloc(2 * sizeof(char));
             new_argument->name[0] = argument;
             new_argument->name[1] = '\0';
             new_argument->type = STATIC;
@@ -196,10 +196,10 @@ void get_string_command_arguments(Command *command, char *line, int line_in_file
         /* Extract and store the \0 argument */
         arguments->amount += 1;
         arguments->arr = (Argument **)realloc(arguments->arr, arguments->amount * sizeof(Argument *));
-        arguments->arr[arguments->amount - 1] = malloc(sizeof(Argument));
+        arguments->arr[arguments->amount - 1] = (Argument *)malloc(sizeof(Argument));
         new_argument = arguments->arr[arguments->amount - 1];
 
-        new_argument->name = malloc(1 * sizeof(char));
+        new_argument->name = (char *)malloc(1 * sizeof(char));
         new_argument->name[0] = '\0';
         new_argument->type = STATIC;
         new_argument->decimal_address = 0;
@@ -226,10 +226,10 @@ void get_command_arguments(Arguments *arguments, char *line)
 
         arguments->amount++;
         arguments->arr = (Argument **)realloc(arguments->arr, arguments->amount * sizeof(Argument *));
-        arguments->arr[arguments->amount - 1] = malloc(sizeof(Argument));
+        arguments->arr[arguments->amount - 1] = (Argument *)malloc(sizeof(Argument));
         new_argument = arguments->arr[arguments->amount - 1];
 
-        new_argument->name = malloc((strlen(token) + 1) * sizeof(char));
+        new_argument->name = (char *)malloc((strlen(token) + 1) * sizeof(char));
         strcpy(new_argument->name, token);
         new_argument->name[strlen(token)] = '\0';
 

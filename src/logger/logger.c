@@ -41,7 +41,7 @@ void printFormatted(const char *format, va_list args)
 void logInfo(const char *info, ...)
 {
     va_list args;
-    char *fullMessage = malloc(strlen(info) + 6 * sizeof(char));
+    char *fullMessage = (char *)malloc(strlen(info) + 6 * sizeof(char));
 
     strcpy(fullMessage, "INFO: "); /* Copy INFO into fullMessage */
     strcat(fullMessage, info);     /* Add the error to fullMessage */
@@ -57,7 +57,7 @@ void logInfo(const char *info, ...)
 void logError(const char *error, ...)
 {
     va_list args;
-    char *fullMessage = malloc(strlen(error) + 6 * sizeof(char));
+    char *fullMessage = (char *)malloc(strlen(error) + 6 * sizeof(char));
 
     strcpy(fullMessage, "ERROR: "); /* Copy ERROR into fullMessage */
     strcat(fullMessage, error);     /* Add the error to fullMessage */
